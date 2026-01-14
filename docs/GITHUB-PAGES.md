@@ -119,6 +119,8 @@ Website shows all 10 runs with:
 
 ## The Workflow (How It Deploys)
 
+We use the **official GitHub marketplace actions** for deployment:
+
 ### Step 1: Get Previous History
 ```yaml
 - name: Get Allure history
@@ -143,21 +145,47 @@ This fetches your previous reports (for history/trends).
 
 This creates a new report that **includes history from all previous runs**.
 
-### Step 3: Deploy to GitHub Pages
+### Step 3: Upload Artifact (Official Action)
 ```yaml
-- name: Deploy to GitHub Pages
-  uses: JamesIves/github-pages-deploy-action@v4
+- name: Upload artifact for Pages
+  uses: actions/upload-pages-artifact@v3
   with:
-    branch: gh-pages           # Target branch
-    folder: allure-history     # What to deploy
-    clean: false               # Don't delete old files
+    path: allure-history
 ```
 
-This pushes everything to the `gh-pages` branch, making it live instantly!
+This uploads the report as an artifact for the Pages deployment.
+
+### Step 4: Deploy to GitHub Pages (Official Action)
+```yaml
+deploy:
+  needs: test
+  environment:
+    name: github-pages
+    url: ${{ steps.deployment.outputs.page_url }}
+  steps:
+    - name: Setup Pages
+      uses: actions/configure-pages@v5
+    - name: Deploy to GitHub Pages
+      uses: actions/deploy-pages@v4
+```
+
+This deploys to the **github-pages environment** using official GitHub actions!
+
+### Official Actions Used
+
+| Action | Purpose |
+|--------|---------|
+| `actions/upload-pages-artifact@v3` | Upload report as deployable artifact |
+| `actions/configure-pages@v5` | Configure Pages settings |
+| `actions/deploy-pages@v4` | Deploy to GitHub Pages environment |
+
+These are the **standard, GitHub-supported marketplace actions** for Pages deployment.
 
 ---
 
 ## Enable GitHub Pages (One-Time Setup)
+
+We use **GitHub Actions** as the source (the official, recommended approach):
 
 ### Via GitHub UI
 
@@ -165,15 +193,24 @@ This pushes everything to the `gh-pages` branch, making it live instantly!
 2. Click **Settings** ⚙️
 3. Scroll to **Pages** (left sidebar)
 4. Under "Build and deployment":
-   - **Source**: Deploy from a branch
-   - **Branch**: `gh-pages`
-   - **Folder**: `/ (root)`
-5. Click **Save**
+   - **Source**: **GitHub Actions** ← Select this!
+5. Done! No branch selection needed.
 
 ### Via GitHub CLI
 ```bash
-gh api repos/[owner]/[repo]/pages -X POST -f source='{"branch":"gh-pages","path":"/"}'
+gh api repos/[owner]/[repo]/pages -X PUT -f build_type='workflow'
 ```
+
+### Why "GitHub Actions" Source?
+
+**Simple Explanation**: Instead of serving files from a branch, GitHub runs your workflow and serves what it produces. More reliable!
+
+**Technical Benefits**:
+- ✅ Official GitHub-supported approach
+- ✅ Environment integration (see deployments in Settings → Environments)
+- ✅ Deployment URL output in workflow logs
+- ✅ Built-in concurrency control
+- ✅ Artifact-based (more reliable than branch-push)
 
 ---
 

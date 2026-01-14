@@ -149,17 +149,27 @@ Generates test results in Allure format
     keep_reports: 20                # Keep last 20 runs
 ```
 
-**Step 5: Publish**
+**Step 5: Upload Artifact**
 ```yaml
-- name: Deploy to GitHub Pages
-  uses: JamesIves/github-pages-deploy-action@v4
+- name: Upload artifact for Pages
+  uses: actions/upload-pages-artifact@v3
   with:
-    branch: gh-pages
-    folder: allure-history
-    clean: false
+    path: allure-history
 ```
 
-> **Why JamesIves action?** More reliable for first-time deployments and handles edge cases better than alternatives.
+**Step 6: Deploy (Separate Job)**
+```yaml
+deploy:
+  needs: test
+  environment:
+    name: github-pages
+    url: ${{ steps.deployment.outputs.page_url }}
+  steps:
+    - uses: actions/configure-pages@v5
+    - uses: actions/deploy-pages@v4
+```
+
+> **Official Actions**: We use the standard GitHub marketplace actions (`actions/upload-pages-artifact`, `actions/configure-pages`, `actions/deploy-pages`) for reliable, supported deployments.
 
 ## What You Get
 
@@ -179,12 +189,29 @@ Generates test results in Allure format
 ## Enabling GitHub Pages
 
 ### First Time Setup
+
+We use **GitHub Actions** as the Pages source (the modern, official approach):
+
 1. Go to your repo on GitHub
 2. Click **Settings** → **Pages**
-3. Under "Source":
-   - Branch: `gh-pages`
-   - Folder: `/ (root)`
-4. Click **Save**
+3. Under "Build and deployment":
+   - **Source**: GitHub Actions
+4. That's it! No branch selection needed.
+
+**Or via CLI**:
+```bash
+gh api repos/OWNER/REPO/pages -X PUT -f build_type='workflow'
+```
+
+### Why "GitHub Actions" Source?
+
+| Feature | Branch Deploy | GitHub Actions |
+|---------|--------------|----------------|
+| Official support | Legacy | ✅ Recommended |
+| Environment integration | ❌ | ✅ Shows in Environments |
+| Deployment URL in workflow | ❌ | ✅ `page_url` output |
+| Concurrency control | Manual | ✅ Built-in |
+| Artifact-based | ❌ | ✅ More reliable |
 
 After the first workflow run, GitHub Pages will automatically serve your reports!
 
