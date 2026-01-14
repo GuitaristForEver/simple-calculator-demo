@@ -51,14 +51,6 @@ jobs:
           pytest --alluredir=allure-results -v || true
           # Continue even if tests fail (for demo purposes)
 
-      - name: Checkout gh-pages for history
-        uses: actions/checkout@v4
-        if: always()
-        continue-on-error: true
-        with:
-          ref: gh-pages
-          path: gh-pages
-
       - name: Get Allure history
         uses: actions/checkout@v4
         if: always()
@@ -77,13 +69,12 @@ jobs:
           allure_history: allure-history
           keep_reports: 20
 
-      - name: Verify allure-history exists
+      - name: Clean up .git folder in allure-history
         if: always()
         run: |
-          ls -la allure-history || mkdir -p allure-history
-          if [ ! "$(ls -A allure-history)" ]; then
-            echo "allure-history is empty, copying from allure-report"
-            cp -r allure-report/* allure-history/ || true
+          if [ -d "allure-history/.git" ]; then
+            echo "Removing .git folder from allure-history"
+            rm -rf allure-history/.git
           fi
           ls -la allure-history
 
@@ -94,4 +85,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: allure-history
-          force_orphan: true
