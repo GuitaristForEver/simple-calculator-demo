@@ -92,26 +92,16 @@ npx allure open allure-report/awesome
 npx allure watch allure-results
 ```
 
-## Configuration (allurerc.mjs)
+## Configuration (Optional)
 
-Allure 3 uses a config file in your project root:
+Allure 3 can use a config file (`allurerc.mjs`) but works great with CLI defaults:
 
-```javascript
-// allurerc.mjs
-import { defineConfig } from "allure";
+```bash
+# Using CLI flags (recommended for CI)
+npx allure generate allure-results --output allure-report --name "My Tests"
 
-export default defineConfig({
-  name: "Simple Calculator - Test Report",
-  output: "./allure-report",
-  plugins: {
-    awesome: {
-      options: {
-        singleFile: false,       // Full report or single HTML
-        reportLanguage: "en",    // UI language
-      },
-    },
-  },
-});
+# Or with config file (for local dev)
+# Create allurerc.mjs - see https://github.com/allure-framework/allure3
 ```
 
 ---
@@ -275,12 +265,11 @@ def test_something():
 
 ```
 .
-├── allurerc.mjs               # Allure 3 configuration
-├── allure-results/            # Raw test data (JSON)
+├── allure-results/            # Raw test data (JSON) - git ignored
 │   ├── test-result-1.json
 │   ├── test-result-2.json
 │   └── history/               # Copied from previous run
-├── allure-report/             # Generated reports
+├── allure-report/             # Generated reports - git ignored
 │   └── awesome/               # Allure 3 "Awesome" UI
 │       ├── index.html
 │       └── history/
