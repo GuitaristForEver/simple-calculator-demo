@@ -1,0 +1,41 @@
+[project]
+name = "simple-calculator"
+version = "1.0.0"
+description = "A simple calculator for demonstrating well-architected software"
+readme = "README.md"
+requires-python = ">=3.8"
+authors = [
+    {name = "Calculator Team"}
+]
+
+# No runtime dependencies needed for the calculator itself
+dependencies = []
+
+[project.optional-dependencies]
+# Development dependencies (testing, etc.)
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+# pytest configuration (same as pytest.ini but in pyproject.toml)
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short --strict-markers --color=yes -ra"
+minversion = "3.8"
+
+[tool.coverage.run]
+# Coverage configuration
+source = ["calculator"]
+omit = ["tests/*"]
+
+[tool.coverage.report]
+# Show which lines aren't covered
+show_missing = true
+skip_covered = false

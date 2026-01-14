@@ -19,6 +19,11 @@ venv/
 env/
 ENV/
 .venv
+.python-version
+
+# === uv ===
+# Modern fast package manager files
+uv.lock
 
 # === IDE & Editor Files ===
 # Your personal workspace settings (VSCode, PyCharm, etc.)

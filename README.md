@@ -64,8 +64,23 @@ This table shows what the calculator can do and explains each feature simply:
 | **Git Ignore** | Keeps temporary and personal files out of Git | `.gitignore` blocks Python cache, IDE settings, etc. | ✅ Done |
 | **Main Branch** | Uses "main" instead of "master" for the default branch | Modern Git convention, set via GitHub CLI | ✅ Done |
 | **Folder Structure** | Organized folders for code, tests, docs, and assets | Professional package layout: `calculator/`, `tests/`, `docs/`, `assets/` | ✅ Done |
+| **uv Support** | Modern fast package manager (10-100x faster than pip!) | `pyproject.toml` for modern Python packaging | ✅ Done |
 
 ## Quick Start
+
+### Install Dependencies
+
+**Using pip (traditional)**:
+```bash
+pip install -r requirements.txt
+```
+
+**Using uv (modern & fast)** ⚡:
+```bash
+uv pip install -e ".[dev]"
+```
+
+> **What's uv?** A super-fast Python package manager (10-100x faster than pip!). See [`docs/UV.md`](docs/UV.md) for details.
 
 ### Run the Calculator
 
@@ -146,13 +161,16 @@ This project uses GitHub Actions for continuous integration:
 ├── tests/                   # ✅ All test files
 │   └── test_calculator.py  # Calculator unit tests
 ├── docs/                    # 📚 Documentation
-│   └── STRUCTURE.md        # Folder structure explained
+│   ├── STRUCTURE.md        # Folder structure explained
+│   ├── TESTING.md          # pytest guide
+│   └── UV.md               # Modern package management
 ├── assets/                  # 🎨 Images and media
 │   └── logo.png            # Calculator robot logo
 ├── .copilot-instructions.md # 🤖 AI guidance
 ├── .gitignore              # 🚫 Git ignore rules
-├── pytest.ini              # ⚙️  pytest configuration
-├── requirements.txt        # 📦 Python dependencies
+├── pyproject.toml          # 📋 Modern project config (uv, pytest, metadata)
+├── pytest.ini              # ⚙️  pytest configuration (legacy)
+├── requirements.txt        # 📦 Python dependencies (pip compatible)
 └── README.md               # 👋 This file
 ```
 

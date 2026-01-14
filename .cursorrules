@@ -1,0 +1,84 @@
+# Calculator Project - Cursor Rules
+
+## Project Context
+This is a simple Python calculator project with a focus on clean architecture, minimal files, and engaging documentation.
+
+## Core Rules
+
+### 1. Explanation First
+- Explain features in simple, beginner-friendly terms before diving into technical details
+- Use analogies and clear language (explain like I'm 5)
+- Follow with technical specifics for developers
+
+### 2. Minimal File Structure
+- Keep the repository clean and minimal
+- Don't create unnecessary files
+- One file per logical component
+
+### 3. Feature Tracker Management
+- **CRITICAL**: When adding any new feature, ALWAYS update the Feature Tracker table in README.md
+- Include:
+  - Simple explanation (beginner-friendly)
+  - Technical details (for developers)
+  - Mark as ✅ Done
+- Update architecture diagrams if the change affects structure
+
+### 4. Documentation Style
+- Keep documentation fun and engaging
+- Avoid walls of text
+- Use clear sections and formatting
+- Add emojis for visual appeal
+
+## Architecture Philosophy
+
+### Design Principles
+- **Simple outside, sophisticated inside** - Easy to use, powerful under the hood
+- **Calculator class = brain** - Each method represents a specific capability
+- **Safety first** - Handle edge cases (e.g., division by zero)
+
+### Code Structure
+- Calculator class contains all calculation logic
+- Each operation is a separate method
+- Input validation and error handling are built-in
+
+## Code Style Requirements
+
+### Naming Conventions
+- Use clear, descriptive function names
+- Avoid cryptic abbreviations
+- Make intent obvious from the name
+
+### Documentation
+- Add docstrings to all functions and classes
+- Comments should explain **why**, not **what**
+- Keep docstrings concise but informative
+
+### Testing
+- Write tests for every feature
+- Test edge cases and error conditions
+- Keep tests simple and readable
+
+## Workflow for New Features
+
+1. **Implement** - Write the feature code
+2. **Test** - Create comprehensive tests
+3. **Document** - Update README Feature Tracker table
+4. **Verify** - Check architecture diagram needs updates
+5. **Commit** - Use clear commit messages
+
+## File Organization
+
+Current structure:
+- `calculator/calculator.py` - Main Calculator class
+- `tests/test_calculator.py` - All tests
+- `README.md` - Main documentation with Feature Tracker
+- `requirements.txt` - Dependencies
+
+Keep this minimal structure unless absolutely necessary to add files.
+
+## Remember
+
+- Keep it simple
+- Keep it fun
+- Keep it minimal
+- Update Feature Tracker for every new capability
