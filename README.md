@@ -58,7 +58,7 @@ This table shows what the calculator can do and explains each feature simply:
 | **Divide** | Splitting a number into equal parts (15 ÷ 3 = 5) | `divide(a, b)` returns `a / b` | ✅ Done |
 | **Division Safety** | Won't let you divide by zero (that breaks math!) | Raises `ValueError` if `b == 0` | ✅ Done |
 | **Interactive Mode** | Type in your own math problems | Command-line interface with input prompts | ✅ Done |
-| **Unit Tests** | Automatic checking that everything works | 5 test cases using `unittest` | ✅ Done |
+| **pytest Testing** | Modern test framework with simple syntax | 5 test cases using `pytest` with fixtures | ✅ Done |
 | **AI Instructions** | Helps AI assistants understand the project rules | `.copilot-instructions.md` with project guidelines | ✅ Done |
 | **Logo** | A friendly calculator robot mascot | Image in `assets/logo.png` displayed at top of README | ✅ Done |
 | **Git Ignore** | Keeps temporary and personal files out of Git | `.gitignore` blocks Python cache, IDE settings, etc. | ✅ Done |
@@ -78,7 +78,13 @@ This will show a demo and then enter interactive mode where you can perform calc
 ### Run Tests
 
 ```bash
-python -m unittest tests.test_calculator -v
+pytest
+```
+
+For more details:
+```bash
+pytest -v              # Verbose output
+pytest --cov           # With coverage report
 ```
 
 ## Usage Examples
@@ -145,6 +151,7 @@ This project uses GitHub Actions for continuous integration:
 │   └── logo.png            # Calculator robot logo
 ├── .copilot-instructions.md # 🤖 AI guidance
 ├── .gitignore              # 🚫 Git ignore rules
+├── pytest.ini              # ⚙️  pytest configuration
 ├── requirements.txt        # 📦 Python dependencies
 └── README.md               # 👋 This file
 ```
@@ -156,7 +163,7 @@ This project uses GitHub Actions for continuous integration:
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Run the tests: `python -m unittest test_calculator.py`
+4. Run the tests: `pytest`
 5. Submit a pull request
 
 The CI pipeline will automatically run tests on your pull request.

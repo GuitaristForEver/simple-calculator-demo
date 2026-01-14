@@ -35,6 +35,9 @@ ENV/
 .coverage
 htmlcov/
 *.cover
+test-output.xml
+output.json
+pytest_html_report.html
 
 # === Distribution & Build ===
 # Generated when packaging the app - we can rebuild these anytime
