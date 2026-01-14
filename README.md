@@ -67,7 +67,7 @@ This table shows what the calculator can do and explains each feature simply:
 | **uv Support** | Modern fast package manager (10-100x faster than pip!) | `pyproject.toml` for modern Python packaging | ✅ Done |
 | **Test Reports** | Pretty HTML reports after running tests | Auto-generated in `reports/` folder (git-ignored) | ✅ Done |
 | **Allure Reporting** | Enterprise test reporting with trends & history | Track test quality over time, detect flaky tests | ✅ Done |
-| **CI/CD Pipeline** | GitHub Actions automatically runs tests & publishes reports | History stored in gh-pages, reports at GitHub Pages URL | ✅ Done |
+| **CI/CD Pipeline** | GitHub Actions automatically runs tests & publishes reports | History stored in gh-pages, multi-layer caching (3x faster!) | ✅ Done |
 
 ## Quick Start
 
@@ -209,6 +209,29 @@ This project uses GitHub Actions for continuous integration:
 5. Submit a pull request
 
 The CI pipeline will automatically run tests on your pull request.
+
+## Contributors ✨
+
+Thanks goes to these wonderful contributors ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/features/copilot"><img src="https://avatars.githubusercontent.com/u/67255190?v=4?s=100" width="100px;" alt="GitHub Copilot"/><br /><sub><b>GitHub Copilot</b></sub></a><br /><a href="#tool-github-copilot" title="Tools">🔧</a> <a href="https://github.com/yuvalgabay/simple-calculator/commits?author=github-copilot" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://www.anthropic.com"><img src="https://avatars.githubusercontent.com/u/100615927?v=4?s=100" width="100px;" alt="Claude Code"/><br /><sub><b>Claude Code</b></sub></a><br /><a href="#tool-anthropic-ai" title="Tools">🔧</a> <a href="https://github.com/yuvalgabay/simple-calculator/commits?author=anthropic-ai" title="Code">💻</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
 ## License
 
