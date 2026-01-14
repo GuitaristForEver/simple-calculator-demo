@@ -7,10 +7,19 @@ on:
     branches: [ main ]
   workflow_dispatch:  # Allow manual trigger
 
+# Sets permissions of the GITHUB_TOKEN
 permissions:
-  contents: write  # Needed to push to gh-pages with GITHUB_TOKEN
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
+  # Job 1: Run tests and build report
   test:
     runs-on: ubuntu-latest
     
@@ -69,10 +78,27 @@ jobs:
           allure_history: allure-history
           keep_reports: 20
 
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: Upload artifact for Pages
+        uses: actions/upload-pages-artifact@v3
         if: always()
         with:
-          branch: gh-pages
-          folder: allure-history
-          clean: false
+          path: allure-history
+
+  # Job 2: Deploy to GitHub Pages (official action)
+  deploy:
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    
+    runs-on: ubuntu-latest
+    
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
