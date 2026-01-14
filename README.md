@@ -67,7 +67,8 @@ This table shows what the calculator can do and explains each feature simply:
 | **uv Support** | Modern fast package manager (10-100x faster than pip!) | `pyproject.toml` for modern Python packaging | ✅ Done |
 | **Test Reports** | Pretty HTML reports after running tests | Auto-generated in `reports/` folder (git-ignored) | ✅ Done |
 | **Allure Reporting** | Enterprise test reporting with trends & history | Track test quality over time, detect flaky tests | ✅ Done |
-| **CI/CD Pipeline** | GitHub Actions automatically runs tests & publishes reports | History stored in gh-pages, multi-layer caching (3x faster!) | ✅ Done |
+| **CI/CD Pipeline** | GitHub Actions automatically runs tests & publishes reports | Multi-layer caching (3x faster!), gh-pages history | ✅ Done |
+| **Comprehensive Docs** | 7 documentation files explaining everything | ARCHITECTURE.md has complete system overview | ✅ Done |
 
 ## Quick Start
 
@@ -177,6 +178,7 @@ This project uses GitHub Actions for continuous integration:
 ├── tests/                   # ✅ All test files
 │   └── test_calculator.py  # Calculator unit tests
 ├── docs/                    # 📚 Documentation
+│   ├── ARCHITECTURE.md     # 🏗️  Complete system overview
 │   ├── STRUCTURE.md        # Folder structure explained
 │   ├── TESTING.md          # pytest guide
 │   ├── UV.md               # Modern package management
@@ -198,7 +200,10 @@ This project uses GitHub Actions for continuous integration:
 └── README.md               # 👋 This file
 ```
 
-**Why this structure?** Each type of file has its own home - code, tests, docs, and media are all separated. Makes it easy to find things as the project grows! See [`docs/STRUCTURE.md`](docs/STRUCTURE.md) for details.
+**Why this structure?** Each type of file has its own home - code, tests, docs, and media are all separated. Makes it easy to find things as the project grows! 
+
+**Want the full picture?** See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the complete system overview!  
+**Just folder details?** See [`docs/STRUCTURE.md`](docs/STRUCTURE.md)
 
 ## Contributing
 
