@@ -69,19 +69,10 @@ jobs:
           allure_history: allure-history
           keep_reports: 20
 
-      - name: Clean up .git folder in allure-history
-        if: always()
-        run: |
-          if [ -d "allure-history/.git" ]; then
-            echo "Removing .git folder from allure-history"
-            rm -rf allure-history/.git
-          fi
-          ls -la allure-history
-
-      - name: Publish to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
         if: always()
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: allure-history
+          branch: gh-pages
+          folder: allure-history
+          clean: false
