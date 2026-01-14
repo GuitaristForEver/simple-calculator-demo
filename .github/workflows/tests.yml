@@ -85,7 +85,7 @@ jobs:
           path: allure-history
 
   # Job 2: Deploy to GitHub Pages (official action)
-  deploy:
+  deploy-github-pages:
     needs: test
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     
