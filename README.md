@@ -63,13 +63,14 @@ This table shows what the calculator can do and explains each feature simply:
 | **Logo** | A friendly calculator robot mascot | Image in `assets/logo.png` displayed at top of README | ✅ Done |
 | **Git Ignore** | Keeps temporary and personal files out of Git | `.gitignore` blocks Python cache, IDE settings, etc. | ✅ Done |
 | **Main Branch** | Uses "main" instead of "master" for the default branch | Modern Git convention, set via GitHub CLI | ✅ Done |
+| **Folder Structure** | Organized folders for code, tests, docs, and assets | Professional package layout: `calculator/`, `tests/`, `docs/`, `assets/` | ✅ Done |
 
 ## Quick Start
 
 ### Run the Calculator
 
 ```bash
-python calculator.py
+python -m calculator.calculator
 ```
 
 This will show a demo and then enter interactive mode where you can perform calculations.
@@ -77,7 +78,7 @@ This will show a demo and then enter interactive mode where you can perform calc
 ### Run Tests
 
 ```bash
-python -m unittest test_calculator.py -v
+python -m unittest tests.test_calculator -v
 ```
 
 ## Usage Examples
@@ -133,14 +134,22 @@ This project uses GitHub Actions for continuous integration:
 
 ```
 .
-├── calculator.py          # Main calculator application
-├── test_calculator.py     # Unit tests
-├── requirements.txt       # Dependencies (currently empty)
-├── .github/
-│   └── workflows/
-│       └── ci.yml        # GitHub Actions CI pipeline
-└── README.md             # This file
+├── calculator/              # 🧠 Calculator app package
+│   ├── __init__.py         # Makes it a Python package
+│   └── calculator.py       # Calculator class and logic
+├── tests/                   # ✅ All test files
+│   └── test_calculator.py  # Calculator unit tests
+├── docs/                    # 📚 Documentation
+│   └── STRUCTURE.md        # Folder structure explained
+├── assets/                  # 🎨 Images and media
+│   └── logo.png            # Calculator robot logo
+├── .copilot-instructions.md # 🤖 AI guidance
+├── .gitignore              # 🚫 Git ignore rules
+├── requirements.txt        # 📦 Python dependencies
+└── README.md               # 👋 This file
 ```
+
+**Why this structure?** Each type of file has its own home - code, tests, docs, and media are all separated. Makes it easy to find things as the project grows! See [`docs/STRUCTURE.md`](docs/STRUCTURE.md) for details.
 
 ## Contributing
 
