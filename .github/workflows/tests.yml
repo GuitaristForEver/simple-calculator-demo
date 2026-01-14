@@ -34,6 +34,11 @@ jobs:
           cache: 'pip'
           cache-dependency-path: 'requirements.txt'
 
+      - name: Set up Node.js (for Allure 3)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
       - name: Cache pip packages
         uses: actions/cache@v4
         with:
@@ -50,7 +55,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pytest-
 
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
@@ -68,21 +73,27 @@ jobs:
           ref: gh-pages
           path: gh-pages
 
-      - name: Build Allure Report
-        uses: simple-elf/allure-report-action@v1.13
+      - name: Copy history from previous runs
         if: always()
-        with:
-          allure_results: allure-results
-          allure_report: allure-report
-          gh_pages: gh-pages
-          allure_history: allure-history
-          keep_reports: 20
+        run: |
+          mkdir -p allure-results/history
+          if [ -d "gh-pages/history" ]; then
+            cp -r gh-pages/history/* allure-results/history/ || true
+          fi
 
-      - name: Upload artifact for Pages
+      - name: Generate Allure 3 Report
+        if: always()
+        run: |
+          npx allure generate allure-results --output allure-report
+          # Copy history for next run
+          mkdir -p allure-report/history
+          cp -r allure-results/history/* allure-report/history/ 2>/dev/null || true
+
+      - name: Upload artifact for GitHub Pages
         uses: actions/upload-pages-artifact@v3
         if: always()
         with:
-          path: allure-history
+          path: allure-report/awesome
 
   # Job 2: Deploy to GitHub Pages (official action)
   deploy-github-pages:

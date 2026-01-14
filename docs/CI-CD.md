@@ -14,15 +14,17 @@ Think of it like having a **robot assistant** that:
 **Without CI/CD**: You manually run tests, create reports, share them  
 **With CI/CD**: Robot does it all automatically every time you push code!
 
-## Our Setup: Tests with Allure History
+## Our Setup: Tests with Allure 3 History
 
 Every time you push code to GitHub:
 1. ✅ GitHub Actions runs automatically
 2. 🧪 Runs all 5 calculator tests
-3. 📊 Generates Allure report
+3. 📊 Generates Allure 3 report (new "Awesome" UI!)
 4. 📈 Merges with previous history (trends!)
 5. 🌐 Publishes to GitHub Pages
 6. 🔗 You get a URL to share!
+
+**🆕 Allure 3**: Uses the new TypeScript-based CLI via `npx allure`
 
 ## How It Works (The Magic)
 
@@ -138,23 +140,27 @@ Generates test results in Allure format
     path: gh-pages  # Put it in gh-pages folder
 ```
 
-**Step 4: Generate Report with History**
+**Step 4: Generate Report with Allure 3**
 ```yaml
-- name: Generate Allure Report with History
-  uses: simple-elf/allure-report-action@v1.13
-  with:
-    allure_results: allure-results  # New results
-    gh_pages: gh-pages              # Old history
-    allure_history: allure-history  # Merged output
-    keep_reports: 20                # Keep last 20 runs
+- name: Copy history from previous runs
+  run: |
+    mkdir -p allure-results/history
+    if [ -d "gh-pages/history" ]; then
+      cp -r gh-pages/history/* allure-results/history/ || true
+    fi
+
+- name: Generate Allure 3 Report
+  run: npx allure generate allure-results --output allure-report
 ```
+
+Uses the new **Allure 3 CLI** via npx - no Java required!
 
 **Step 5: Upload Artifact**
 ```yaml
 - name: Upload artifact for Pages
   uses: actions/upload-pages-artifact@v3
   with:
-    path: allure-history
+    path: allure-report/awesome   # The new Allure 3 "Awesome" UI
 ```
 
 **Step 6: Deploy (Separate Job)**

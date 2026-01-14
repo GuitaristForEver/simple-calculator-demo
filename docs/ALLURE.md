@@ -8,6 +8,32 @@ Imagine test reports like photos vs movies:
 
 Allure is an **enterprise-level test reporting framework** used by companies like Google, Microsoft, and Netflix to track test quality over time.
 
+---
+
+## 🆕 Allure 3 - The Next Generation
+
+**This project uses Allure 3** - the completely rewritten version with:
+- ✨ **New "Awesome" UI** - Beautiful, modern interface
+- 🚀 **TypeScript rewrite** - Faster and more extensible
+- 📦 **npm/npx install** - No Java needed!
+- 🔌 **Plugin system** - Customizable reports
+- 👀 **Real-time watching** - See results as tests run
+
+### Allure 3 vs Allure 2
+
+| Feature | Allure 2 | Allure 3 |
+|---------|----------|----------|
+| **Install** | Java + brew/scoop | `npx allure` |
+| **Language** | Java | TypeScript |
+| **UI** | Classic | Awesome (modern) |
+| **Single file output** | ❌ | ✅ Option |
+| **Watch mode** | ❌ | ✅ Live updates |
+| **Plugin system** | Limited | ✅ Extensible |
+
+📚 **Official repo**: https://github.com/allure-framework/allure3
+
+---
+
 ## Why Allure? (For This Demo Project)
 
 This calculator demonstrates **well-architected software**:
@@ -34,12 +60,61 @@ uv pip install -e ".[dev]"
 pytest --alluredir=allure-results
 ```
 
-### 3. Generate and View Report
+### 3. Generate and View Report (Allure 3)
 ```bash
-allure serve allure-results
+# Generate report
+npx allure generate allure-results
+
+# Open in browser
+npx allure open allure-report/awesome
+```
+
+Or use the one-liner:
+```bash
+npx allure run -- pytest
 ```
 
 A browser will open with your beautiful test report! 🎉
+
+## Allure 3 Commands Cheat Sheet
+
+```bash
+# Run tests and generate report in one command
+npx allure run -- pytest
+
+# Generate report from existing results
+npx allure generate allure-results
+
+# Open the generated report
+npx allure open allure-report/awesome
+
+# Watch mode - live updates as tests run
+npx allure watch allure-results
+```
+
+## Configuration (allurerc.mjs)
+
+Allure 3 uses a config file in your project root:
+
+```javascript
+// allurerc.mjs
+import { defineConfig } from "allure";
+
+export default defineConfig({
+  name: "Simple Calculator - Test Report",
+  output: "./allure-report",
+  plugins: {
+    awesome: {
+      options: {
+        singleFile: false,       // Full report or single HTML
+        reportLanguage: "en",    // UI language
+      },
+    },
+  },
+});
+```
+
+---
 
 ## What You Get
 
@@ -91,23 +166,23 @@ Trends appear after running tests **multiple times**. Here's how:
 ### First Run
 ```bash
 pytest --alluredir=allure-results
-allure generate allure-results -o allure-report --clean
+npx allure generate allure-results
 ```
 Result: Beautiful report, but no trends yet (only 1 data point)
 
 ### Second Run (Next Day or After Code Changes)
 ```bash
 # Preserve history
-cp -r allure-report/history allure-results/history
+cp -r allure-report/awesome/history allure-results/history
 
 # Run tests again
 pytest --alluredir=allure-results
 
 # Generate with history
-allure generate allure-results -o allure-report --clean
+npx allure generate allure-results
 
 # Open report
-allure open allure-report
+npx allure open allure-report/awesome
 ```
 
 Now you'll see:
@@ -175,77 +250,48 @@ def test_something():
 | **Visual beauty** | Good | ✅ Excellent |
 | **Setup complexity** | Simple | More steps |
 
-## Use Cases
-
-### For This Demo Project
-- Show "enterprise-grade testing" in action
-- Demonstrate professional practices
-- Beautiful reports for presentations
-- Track test quality as project evolves
-
-### In Real Projects
-- **Large test suites**: Track 1000+ tests
-- **CI/CD pipelines**: Monitor test health over time
-- **Team dashboards**: Share test results visually
-- **Flaky test hunting**: Find unreliable tests
-- **Performance regression**: Catch slow tests early
-
 ## CI/CD Integration
 
-### GitHub Actions Example
+### GitHub Actions with Allure 3
 ```yaml
+- name: Set up Node.js
+  uses: actions/setup-node@v4
+  with:
+    node-version: '20'
+
 - name: Run tests with Allure
   run: pytest --alluredir=allure-results
 
-- name: Generate Allure Report
-  run: allure generate allure-results -o allure-report
+- name: Generate Allure 3 Report
+  run: npx allure generate allure-results
 
 - name: Upload Allure Report
-  uses: actions/upload-artifact@v3
+  uses: actions/upload-pages-artifact@v3
   with:
-    name: allure-report
-    path: allure-report/
-```
-
-## Commands Cheat Sheet
-
-```bash
-# Run tests with Allure
-pytest --alluredir=allure-results
-
-# Generate report (clean)
-allure generate allure-results -o allure-report --clean
-
-# Open report in browser
-allure open allure-report
-
-# Serve report (auto-opens browser)
-allure serve allure-results
-
-# Clean old results
-rm -rf allure-results allure-report
+    path: allure-report/awesome
 ```
 
 ## Folder Structure
 
 ```
 .
-├── allure-results/        # Raw test data (JSON)
+├── allurerc.mjs               # Allure 3 configuration
+├── allure-results/            # Raw test data (JSON)
 │   ├── test-result-1.json
 │   ├── test-result-2.json
-│   └── history/           # Copied from previous run
-├── allure-report/         # Generated HTML report
-│   ├── index.html
-│   ├── history/           # Trend data
-│   └── data/
-└── reports/               # pytest-html reports
+│   └── history/               # Copied from previous run
+├── allure-report/             # Generated reports
+│   └── awesome/               # Allure 3 "Awesome" UI
+│       ├── index.html
+│       └── history/
+└── reports/                   # pytest-html reports
     └── test-report.html
 ```
 
 ## Why Both pytest-html AND Allure?
 
 **pytest-html**: Quick, simple, instant feedback (1 command)  
-**Allure**: Professional, detailed, trends (2 commands + history management)
+**Allure**: Professional, detailed, trends (uses npx)
 
 Use **pytest-html** for quick checks during development.  
 Use **Allure** for demos, presentations, and tracking quality over time.
@@ -256,7 +302,7 @@ Use **Allure** for demos, presentations, and tracking quality over time.
 2. **Use decorators** to organize tests (@allure.feature, @allure.story)
 3. **Mark critical tests** with severity levels
 4. **Run regularly** to build up historical data
-5. **Share reports** - they're just HTML, easy to host!
+5. **Try watch mode** for real-time feedback: `npx allure watch allure-results`
 
 ## The Sophistication
 
