@@ -40,6 +40,8 @@ uv.lock
 .coverage
 htmlcov/
 *.cover
+reports/
+archive/
 test-output.xml
 output.json
 pytest_html_report.html

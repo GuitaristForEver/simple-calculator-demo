@@ -65,6 +65,7 @@ This table shows what the calculator can do and explains each feature simply:
 | **Main Branch** | Uses "main" instead of "master" for the default branch | Modern Git convention, set via GitHub CLI | ✅ Done |
 | **Folder Structure** | Organized folders for code, tests, docs, and assets | Professional package layout: `calculator/`, `tests/`, `docs/`, `assets/` | ✅ Done |
 | **uv Support** | Modern fast package manager (10-100x faster than pip!) | `pyproject.toml` for modern Python packaging | ✅ Done |
+| **Test Reports** | Pretty HTML reports after running tests | Auto-generated in `reports/` folder (git-ignored) | ✅ Done |
 
 ## Quick Start
 
@@ -101,6 +102,8 @@ For more details:
 pytest -v              # Verbose output
 pytest --cov           # With coverage report
 ```
+
+After running tests, check `reports/test-report.html` for a beautiful visual report! 📊
 
 ## Usage Examples
 
@@ -166,6 +169,9 @@ This project uses GitHub Actions for continuous integration:
 │   └── UV.md               # Modern package management
 ├── assets/                  # 🎨 Images and media
 │   └── logo.png            # Calculator robot logo
+├── reports/                 # 📊 Test reports (auto-generated, git-ignored)
+│   ├── test-report.html    # HTML test report
+│   └── junit.xml           # JUnit XML report for CI/CD
 ├── .copilot-instructions.md # 🤖 AI guidance
 ├── .gitignore              # 🚫 Git ignore rules
 ├── pyproject.toml          # 📋 Modern project config (uv, pytest, metadata)
