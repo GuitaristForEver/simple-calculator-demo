@@ -67,6 +67,7 @@ This table shows what the calculator can do and explains each feature simply:
 | **uv Support** | Modern fast package manager (10-100x faster than pip!) | `pyproject.toml` for modern Python packaging | ✅ Done |
 | **Test Reports** | Pretty HTML reports after running tests | Auto-generated in `reports/` folder (git-ignored) | ✅ Done |
 | **Allure Reporting** | Enterprise test reporting with trends & history | Track test quality over time, detect flaky tests | ✅ Done |
+| **CI/CD Pipeline** | GitHub Actions automatically runs tests & publishes reports | History stored in gh-pages, reports at GitHub Pages URL | ✅ Done |
 
 ## Quick Start
 
@@ -113,7 +114,9 @@ pytest --cov           # With coverage report
 
 After running tests, check `reports/test-report.html` for a quick visual report!  
 Or use Allure for enterprise-level reporting with trends 📊  
-See [`docs/ALLURE.md`](docs/ALLURE.md) for details.
+
+**Automated CI/CD**: Every push to `main` automatically runs tests and publishes Allure reports to GitHub Pages with history tracking!  
+See [`docs/ALLURE.md`](docs/ALLURE.md) and [`docs/CI-CD.md`](docs/CI-CD.md) for details.
 
 ## Usage Examples
 
@@ -177,7 +180,11 @@ This project uses GitHub Actions for continuous integration:
 │   ├── STRUCTURE.md        # Folder structure explained
 │   ├── TESTING.md          # pytest guide
 │   ├── UV.md               # Modern package management
-│   └── ALLURE.md           # Enterprise test reporting
+│   ├── ALLURE.md           # Enterprise test reporting
+│   └── CI-CD.md            # GitHub Actions automation
+├── .github/
+│   └── workflows/
+│       └── tests.yml       # Automated testing with Allure
 ├── assets/                  # 🎨 Images and media
 │   └── logo.png            # Calculator robot logo
 ├── reports/                 # 📊 Test reports (auto-generated, git-ignored)
