@@ -1,0 +1,49 @@
+# .gitignore - Keeps the messy stuff out of Git! 🧹
+
+# Why do we need this?
+# Git tracks every file by default. But some files are temporary, personal, 
+# or machine-generated - we don't want to share those with the team!
+# Think of it like: "Don't pack your dirty laundry when visiting friends"
+
+# === Python Mess ===
+# When Python runs, it creates compiled files (.pyc) and cache folders
+# These are like rough drafts - we only want the final code in Git
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# === Virtual Environments ===
+# Each developer has their own setup - don't share the whole toolbox!
+venv/
+env/
+ENV/
+.venv
+
+# === IDE & Editor Files ===
+# Your personal workspace settings (VSCode, PyCharm, etc.)
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# === Testing Artifacts ===
+# Test reports and coverage data - generated every time, not needed in Git
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+
+# === Distribution & Build ===
+# Generated when packaging the app - we can rebuild these anytime
+dist/
+build/
+*.egg-info/
+*.egg
+
+# === OS Generated Files ===
+# Operating system creates these - they're like digital fingerprints
+.DS_Store
+Thumbs.db

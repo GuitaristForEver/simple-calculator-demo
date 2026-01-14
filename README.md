@@ -61,6 +61,7 @@ This table shows what the calculator can do and explains each feature simply:
 | **Unit Tests** | Automatic checking that everything works | 5 test cases using `unittest` | ✅ Done |
 | **AI Instructions** | Helps AI assistants understand the project rules | `.copilot-instructions.md` with project guidelines | ✅ Done |
 | **Logo** | A friendly calculator robot mascot | Image in `assets/logo.png` displayed at top of README | ✅ Done |
+| **Git Ignore** | Keeps temporary and personal files out of Git | `.gitignore` blocks Python cache, IDE settings, etc. | ✅ Done |
 
 ## Quick Start
 
