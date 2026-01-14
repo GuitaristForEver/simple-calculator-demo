@@ -9,6 +9,53 @@ A basic Python calculator to demonstrate simple CI/CD concepts with GitHub Actio
 - Automated testing with CI/CD
 - Simple and clean codebase
 
+## How It Works (The Simple Version)
+
+Think of the calculator like a **helper robot**. You tell it what to do (add, subtract, multiply, or divide), give it two numbers, and it gives you the answer back.
+
+**Under the Hood**: The calculator is built using a `Calculator` class that keeps all the math operations organized in one place. Each operation is a separate method that knows exactly how to do its job. When you divide by zero, it politely stops you because that would break math!
+
+## Architecture
+
+Here's how the pieces fit together:
+
+```mermaid
+flowchart TD
+    User[You] -->|Give numbers + operation| Calculator
+    Calculator -->|Returns answer| User
+    
+    subgraph CalculatorBrain[Calculator Brain]
+        Add[Add Numbers]
+        Subtract[Subtract Numbers]
+        Multiply[Multiply Numbers]
+        Divide[Divide Numbers]
+        SafetyCheck[Division Safety Check]
+    end
+    
+    Calculator --> CalculatorBrain
+    Divide --> SafetyCheck
+```
+
+**What This Means**: 
+- You give the calculator two numbers and tell it what to do
+- The calculator has a "brain" (the Calculator class) with different skills
+- Each skill does one thing really well
+- The division skill has a safety check to prevent math errors
+
+## Feature Tracker
+
+This table shows what the calculator can do and explains each feature simply:
+
+| Feature | Simple Explanation | Tech Details | Status |
+|---------|-------------------|--------------|--------|
+| **Add** | Puts two numbers together (5 + 3 = 8) | `add(a, b)` returns `a + b` | ✅ Done |
+| **Subtract** | Takes one number away from another (10 - 4 = 6) | `subtract(a, b)` returns `a - b` | ✅ Done |
+| **Multiply** | Adding a number to itself many times (3 × 4 = 12) | `multiply(a, b)` returns `a * b` | ✅ Done |
+| **Divide** | Splitting a number into equal parts (15 ÷ 3 = 5) | `divide(a, b)` returns `a / b` | ✅ Done |
+| **Division Safety** | Won't let you divide by zero (that breaks math!) | Raises `ValueError` if `b == 0` | ✅ Done |
+| **Interactive Mode** | Type in your own math problems | Command-line interface with input prompts | ✅ Done |
+| **Unit Tests** | Automatic checking that everything works | 5 test cases using `unittest` | ✅ Done |
+
 ## Quick Start
 
 ### Run the Calculator
