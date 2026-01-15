@@ -160,7 +160,7 @@ Uses the new **Allure 3 CLI** via npx - no Java required!
 - name: Upload artifact for Pages
   uses: actions/upload-pages-artifact@v3
   with:
-    path: allure-report/awesome   # The new Allure 3 "Awesome" UI
+    path: allure-report   # Allure 3 report output
 ```
 
 **Step 6: Deploy (Separate Job)**

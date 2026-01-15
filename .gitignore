@@ -44,6 +44,7 @@ reports/
 archive/
 allure-results/
 allure-report/
+allure-report-*/
 test-output.xml
 output.json
 pytest_html_report.html
