@@ -9,7 +9,7 @@ on:
 
 # Sets permissions of the GITHUB_TOKEN
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -78,10 +78,27 @@ jobs:
           allure_history: allure-history
           keep_reports: 20
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        if: always() && github.ref == 'refs/heads/main'
+      - name: Upload artifact for GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        if: always()
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: allure-history
+          path: allure-history
+
+  # Job 2: Deploy to GitHub Pages (official action)
+  deploy-github-pages:
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    
+    runs-on: ubuntu-latest
+    
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
