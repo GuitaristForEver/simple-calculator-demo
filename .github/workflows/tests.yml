@@ -34,11 +34,6 @@ jobs:
           cache: 'pip'
           cache-dependency-path: 'requirements.txt'
 
-      - name: Set up Node.js (for Allure 3)
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
       - name: Cache pip packages
         uses: actions/cache@v4
         with:
@@ -73,45 +68,20 @@ jobs:
           ref: gh-pages
           path: gh-pages
 
-      - name: Copy history from previous runs
-        if: always()
-        run: |
-          mkdir -p allure-results/history
-          if [ -d "gh-pages/widgets" ]; then
-            cp -r gh-pages/widgets/* allure-results/history/ || true
-          fi
-
-      - name: Generate Allure 3 Report
-        if: always()
-        run: |
-          # Install and generate report with Allure 3
-          npx --yes allure generate allure-results --output allure-report --name "Simple Calculator Tests"
-          
-          # List output to see structure
-          echo "=== Allure Report Output ==="
-          ls -la allure-report/
-
-      - name: Upload artifact for GitHub Pages
-        uses: actions/upload-pages-artifact@v3
+      - name: Generate Allure Report with History
+        uses: simple-elf/allure-report-action@master
         if: always()
         with:
-          path: allure-report
-
-  # Job 2: Deploy to GitHub Pages (official action)
-  deploy-github-pages:
-    needs: test
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-    
-    runs-on: ubuntu-latest
-    
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    
-    steps:
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
+          allure_results: allure-results
+          gh_pages: gh-pages
+          allure_report: allure-report
+          allure_history: allure-history
+          keep_reports: 20
 
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        uses: peaceiris/actions-gh-pages@v3
+        if: always() && github.ref == 'refs/heads/main'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
