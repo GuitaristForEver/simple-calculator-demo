@@ -77,8 +77,8 @@ jobs:
         if: always()
         run: |
           mkdir -p allure-results/history
-          if [ -d "gh-pages/history" ]; then
-            cp -r gh-pages/history/* allure-results/history/ || true
+          if [ -d "gh-pages/widgets" ]; then
+            cp -r gh-pages/widgets/* allure-results/history/ || true
           fi
 
       - name: Generate Allure 3 Report
@@ -90,16 +90,12 @@ jobs:
           # List output to see structure
           echo "=== Allure Report Output ==="
           ls -la allure-report/
-          
-          # Copy history for next run (from the awesome subdir if it exists)
-          mkdir -p allure-report/awesome/history 2>/dev/null || true
-          cp -r allure-results/history/* allure-report/awesome/history/ 2>/dev/null || true
 
       - name: Upload artifact for GitHub Pages
         uses: actions/upload-pages-artifact@v3
         if: always()
         with:
-          path: allure-report/awesome
+          path: allure-report
 
   # Job 2: Deploy to GitHub Pages (official action)
   deploy-github-pages:

@@ -66,7 +66,7 @@ pytest --alluredir=allure-results
 npx allure generate allure-results
 
 # Open in browser
-npx allure open allure-report/awesome
+npx allure open allure-report
 ```
 
 Or use the one-liner:
@@ -86,7 +86,7 @@ npx allure run -- pytest
 npx allure generate allure-results
 
 # Open the generated report
-npx allure open allure-report/awesome
+npx allure open allure-report
 
 # Watch mode - live updates as tests run
 npx allure watch allure-results
@@ -163,7 +163,7 @@ Result: Beautiful report, but no trends yet (only 1 data point)
 ### Second Run (Next Day or After Code Changes)
 ```bash
 # Preserve history
-cp -r allure-report/awesome/history allure-results/history
+cp -r allure-report/widgets allure-results/history
 
 # Run tests again
 pytest --alluredir=allure-results
@@ -172,7 +172,7 @@ pytest --alluredir=allure-results
 npx allure generate allure-results
 
 # Open report
-npx allure open allure-report/awesome
+npx allure open allure-report
 ```
 
 Now you'll see:
@@ -258,7 +258,7 @@ def test_something():
 - name: Upload Allure Report
   uses: actions/upload-pages-artifact@v3
   with:
-    path: allure-report/awesome
+    path: allure-report
 ```
 
 ## Folder Structure
@@ -268,11 +268,11 @@ def test_something():
 ├── allure-results/            # Raw test data (JSON) - git ignored
 │   ├── test-result-1.json
 │   ├── test-result-2.json
-│   └── history/               # Copied from previous run
-├── allure-report/             # Generated reports - git ignored
-│   └── awesome/               # Allure 3 "Awesome" UI
-│       ├── index.html
-│       └── history/
+│   └── history/               # Copied from previous run (widgets)
+├── allure-report/             # Generated HTML report - git ignored
+│   ├── index.html             # Main report page
+│   ├── data/                  # Test results data
+│   └── widgets/               # Report widgets and history
 └── reports/                   # pytest-html reports
     └── test-report.html
 ```
