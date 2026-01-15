@@ -1,0 +1,11 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"
+Test the addition operation with various inputs:
+- Positive numbers
+- Negative numbers  
+- Zero
+","0","test_add","tests","Thu Jan 15 08:07:43 UTC 2026","passed","Thu Jan 15 08:07:43 UTC 2026","","test_calculator","",""
+"Test that division by zero is properly handled and raises ValueError","1","test_divide_by_zero","tests","Thu Jan 15 08:07:43 UTC 2026","passed","Thu Jan 15 08:07:43 UTC 2026","","test_calculator","",""
+"Test the multiplication operation with various inputs","0","test_multiply","tests","Thu Jan 15 08:07:43 UTC 2026","passed","Thu Jan 15 08:07:43 UTC 2026","","test_calculator","",""
+"Test the division operation with various inputs","0","test_divide","tests","Thu Jan 15 08:07:43 UTC 2026","passed","Thu Jan 15 08:07:43 UTC 2026","","test_calculator","",""
+"Test the subtraction operation with various inputs","0","test_subtract","tests","Thu Jan 15 08:07:43 UTC 2026","passed","Thu Jan 15 08:07:43 UTC 2026","","test_calculator","",""
