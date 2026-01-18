@@ -32,31 +32,32 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install pre-commit
-        run: pip install pre-commit
-
       - name: Run pre-commit hooks
         id: precommit
+        uses: pre-commit/action@v3.0.1
+
+      - name: Generate summary
+        if: always()
         run: |
-          echo "## 🛡️ Pre-commit Hooks Results" >> $GITHUB_STEP_SUMMARY
+          echo "## 🛡️ Pre-commit Hooks" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          # Run pre-commit and capture output
-          if pre-commit run --all-files --show-diff-on-failure > precommit_output.txt 2>&1; then
-            echo "✅ **All pre-commit hooks passed!**" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.precommit.outcome }}" == "success" ]; then
+            echo "✅ **All pre-commit hooks passed successfully!**" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "### Hooks Executed" >> $GITHUB_STEP_SUMMARY
-            echo '```' >> $GITHUB_STEP_SUMMARY
-            cat precommit_output.txt >> $GITHUB_STEP_SUMMARY
-            echo '```' >> $GITHUB_STEP_SUMMARY
+            echo "### Checks Performed" >> $GITHUB_STEP_SUMMARY
+            echo "| Category | Checks |" >> $GITHUB_STEP_SUMMARY
+            echo "|----------|--------|" >> $GITHUB_STEP_SUMMARY
+            echo "| 🔒 Security | Gitleaks (secrets), Private Keys |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🐍 Python | Ruff (linting), Ruff (formatting), isort (imports) |" >> $GITHUB_STEP_SUMMARY
+            echo "| 📄 Files | Whitespace, Line endings, YAML/JSON/TOML validation |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🛡️ Safety | Large files, Merge conflicts, Case conflicts |" >> $GITHUB_STEP_SUMMARY
           else
-            echo "❌ **Some pre-commit hooks failed!**" >> $GITHUB_STEP_SUMMARY
+            echo "❌ **Pre-commit hooks failed!**" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "### Failed Hooks" >> $GITHUB_STEP_SUMMARY
-            echo '```' >> $GITHUB_STEP_SUMMARY
-            cat precommit_output.txt >> $GITHUB_STEP_SUMMARY
-            echo '```' >> $GITHUB_STEP_SUMMARY
-            exit 1
+            echo "Please check the logs above for details." >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "💡 **Tip**: Run \`pre-commit run --all-files\` locally to see and fix issues." >> $GITHUB_STEP_SUMMARY
           fi
 
   # Job 2: Run tests and build report
