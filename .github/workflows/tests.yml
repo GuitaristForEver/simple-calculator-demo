@@ -32,8 +32,32 @@ jobs:
         with:
           python-version: '3.9'
 
+      - name: Install pre-commit
+        run: pip install pre-commit
+
       - name: Run pre-commit hooks
-        uses: pre-commit/action@v3.0.1
+        id: precommit
+        run: |
+          echo "## 🛡️ Pre-commit Hooks Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Run pre-commit and capture output
+          if pre-commit run --all-files --show-diff-on-failure > precommit_output.txt 2>&1; then
+            echo "✅ **All pre-commit hooks passed!**" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Hooks Executed" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            cat precommit_output.txt >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Some pre-commit hooks failed!**" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Failed Hooks" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            cat precommit_output.txt >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
 
   # Job 2: Run tests and build report
   test:
