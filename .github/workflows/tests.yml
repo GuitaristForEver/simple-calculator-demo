@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: 🚀 CI Pipeline
 
 on:
   push:
@@ -63,9 +63,10 @@ jobs:
             echo "Run \`pre-commit run --all-files\` locally to fix." >> $GITHUB_STEP_SUMMARY
           fi
 
-  # Job 2: Tests & Coverage (runs in parallel)
+  # Job 2: Tests & Coverage (runs after lint)
   test:
     name: 🧪 Test
+    needs: [lint]
     runs-on: ubuntu-latest
 
     steps:
