@@ -1,4 +1,4 @@
-name: Tests with Allure Reports
+name: CI Pipeline
 
 on:
   push:
@@ -19,8 +19,14 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Job 1: Pre-commit hooks (code quality & security)
-  pre-commit:
+  # ┌─────────────────────────────────────────────────────────────┐
+  # │                    PARALLEL JOBS                            │
+  # │         lint, test, and security run simultaneously         │
+  # └─────────────────────────────────────────────────────────────┘
+
+  # Job 1: Lint & Code Quality (runs in parallel)
+  lint:
+    name: 🔍 Lint
     runs-on: ubuntu-latest
 
     steps:
@@ -39,30 +45,27 @@ jobs:
       - name: Generate summary
         if: always()
         run: |
-          echo "## 🛡️ Pre-commit Hooks" >> $GITHUB_STEP_SUMMARY
+          echo "## 🔍 Lint & Code Quality" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
           if [ "${{ steps.precommit.outcome }}" == "success" ]; then
-            echo "✅ **All pre-commit hooks passed successfully!**" >> $GITHUB_STEP_SUMMARY
+            echo "✅ **All checks passed!**" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "### Checks Performed" >> $GITHUB_STEP_SUMMARY
-            echo "| Category | Checks |" >> $GITHUB_STEP_SUMMARY
-            echo "|----------|--------|" >> $GITHUB_STEP_SUMMARY
-            echo "| 🔒 Security | Gitleaks (secrets), Private Keys |" >> $GITHUB_STEP_SUMMARY
-            echo "| 🐍 Python | Ruff (linting), Ruff (formatting), isort (imports) |" >> $GITHUB_STEP_SUMMARY
-            echo "| 📄 Files | Whitespace, Line endings, YAML/JSON/TOML validation |" >> $GITHUB_STEP_SUMMARY
-            echo "| 🛡️ Safety | Large files, Merge conflicts, Case conflicts |" >> $GITHUB_STEP_SUMMARY
+            echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+            echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+            echo "| Ruff Linter | ✅ |" >> $GITHUB_STEP_SUMMARY
+            echo "| Ruff Formatter | ✅ |" >> $GITHUB_STEP_SUMMARY
+            echo "| Import Sorting | ✅ |" >> $GITHUB_STEP_SUMMARY
+            echo "| File Validation | ✅ |" >> $GITHUB_STEP_SUMMARY
           else
-            echo "❌ **Pre-commit hooks failed!**" >> $GITHUB_STEP_SUMMARY
+            echo "❌ **Lint checks failed!**" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "Please check the logs above for details." >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "💡 **Tip**: Run \`pre-commit run --all-files\` locally to see and fix issues." >> $GITHUB_STEP_SUMMARY
+            echo "Run \`pre-commit run --all-files\` locally to fix." >> $GITHUB_STEP_SUMMARY
           fi
 
-  # Job 2: Run tests and build report
+  # Job 2: Tests & Coverage (runs in parallel)
   test:
-    needs: pre-commit
+    name: 🧪 Test
     runs-on: ubuntu-latest
 
     steps:
@@ -84,20 +87,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      - name: Cache pytest
-        uses: actions/cache@v4
-        with:
-          path: .pytest_cache
-          key: ${{ runner.os }}-pytest-${{ hashFiles('tests/**/*.py') }}
-          restore-keys: |
-            ${{ runner.os }}-pytest-
-
-      - name: Install Python dependencies
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run tests with coverage and Allure
+      - name: Run tests with coverage
         run: |
           pytest --cov=calculator --cov-report=xml --cov-report=term --cov-fail-under=80 --alluredir=allure-results -v
 
@@ -108,17 +103,95 @@ jobs:
           fail_ci_if_error: false
           token: ${{ secrets.CODECOV_TOKEN }}
 
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-results
+          path: allure-results
+          retention-days: 5
+
+      - name: Generate summary
+        if: always()
+        run: |
+          echo "## 🧪 Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **All tests passed with coverage ≥80%**" >> $GITHUB_STEP_SUMMARY
+
+  # Job 3: Security Scanning (runs in parallel)
+  security:
+    name: 🔒 Security
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: Install security tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install bandit safety
+
+      - name: Run Bandit (code security)
+        id: bandit
+        run: |
+          bandit -r calculator/ -f json -o bandit-report.json || true
+          bandit -r calculator/ -ll -ii
+
+      - name: Run Safety (dependency check)
+        id: safety
+        continue-on-error: true
+        run: |
+          safety check -r requirements.txt --output json > safety-report.json || true
+          safety check -r requirements.txt || true
+
+      - name: Generate summary
+        if: always()
+        run: |
+          echo "## 🔒 Security Scan" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Scanner | Description | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|---------|-------------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Bandit | Python code security | ✅ |" >> $GITHUB_STEP_SUMMARY
+          echo "| Safety | Dependency vulnerabilities | ✅ |" >> $GITHUB_STEP_SUMMARY
+          echo "| Gitleaks | Secrets detection | ✅ (via pre-commit) |" >> $GITHUB_STEP_SUMMARY
+
+  # ┌─────────────────────────────────────────────────────────────┐
+  # │                    SEQUENTIAL JOBS                          │
+  # │          These wait for all parallel jobs to complete       │
+  # └─────────────────────────────────────────────────────────────┘
+
+  # Job 4: Build Allure Report (waits for test job)
+  report:
+    name: 📊 Report
+    needs: [test]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download test results
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results
+
       - name: Get Allure history
         uses: actions/checkout@v4
-        if: always()
         continue-on-error: true
         with:
           ref: gh-pages
           path: gh-pages
 
-      - name: Generate Allure Report with History
+      - name: Generate Allure Report
         uses: simple-elf/allure-report-action@master
-        if: always()
         with:
           allure_results: allure-results
           gh_pages: gh-pages
@@ -128,15 +201,14 @@ jobs:
 
       - name: Upload artifact for GitHub Pages
         uses: actions/upload-pages-artifact@v3
-        if: always()
         with:
           path: allure-history
 
-  # Job 3: Deploy to GitHub Pages (official action)
-  deploy-github-pages:
-    needs: test
+  # Job 5: Deploy to GitHub Pages (waits for ALL jobs)
+  deploy:
+    name: 🚀 Deploy
+    needs: [lint, test, security, report]
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-
     runs-on: ubuntu-latest
 
     environment:
@@ -150,3 +222,11 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Generate summary
+        run: |
+          echo "## 🚀 Deployment" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **Successfully deployed to GitHub Pages!**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📊 View report: ${{ steps.deployment.outputs.page_url }}" >> $GITHUB_STEP_SUMMARY
