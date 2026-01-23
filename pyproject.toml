@@ -41,3 +41,10 @@ omit = ["tests/*"]
 # Show which lines aren't covered
 show_missing = true
 skip_covered = false
+# Exclude interactive/CLI code from coverage (standard practice)
+exclude_lines = [
+    "pragma: no cover",
+    "def main",
+    "if __name__ == .__main__.:",
+    "raise NotImplementedError",
+]

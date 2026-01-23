@@ -3,6 +3,10 @@
 
   # Simple Calculator App
 
+  [![Tests](https://github.com/GuitaristForEver/simple-calculator/actions/workflows/tests.yml/badge.svg)](https://github.com/GuitaristForEver/simple-calculator/actions/workflows/tests.yml)
+  [![codecov](https://codecov.io/gh/GuitaristForEver/simple-calculator/graph/badge.svg)](https://codecov.io/gh/GuitaristForEver/simple-calculator)
+  [![CodeQL](https://github.com/GuitaristForEver/simple-calculator/actions/workflows/codeql.yml/badge.svg)](https://github.com/GuitaristForEver/simple-calculator/actions/workflows/codeql.yml)
+
   A basic Python calculator to demonstrate simple CI/CD concepts with GitHub Actions.
 </div>
 
