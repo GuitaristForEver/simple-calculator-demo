@@ -94,6 +94,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run tests with coverage
+        id: test-step
         run: |
           pytest --cov=calculator --cov-report=xml --cov-report=term --cov-fail-under=80 --alluredir=allure-results -v
 
@@ -117,7 +118,11 @@ jobs:
         run: |
           echo "## 🧪 Test Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "✅ **All tests passed with coverage ≥80%**" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.test-step.outcome }}" == "success" ]; then
+            echo "✅ **All tests passed with coverage ≥80%**" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Tests failed or coverage below 80%**" >> $GITHUB_STEP_SUMMARY
+          fi
 
   # Job 3: Security Scanning
   security:

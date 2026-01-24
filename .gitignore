@@ -38,6 +38,7 @@ uv.lock
 # Test reports and coverage data - generated every time, not needed in Git
 .pytest_cache/
 .coverage
+coverage.xml
 htmlcov/
 *.cover
 reports/
