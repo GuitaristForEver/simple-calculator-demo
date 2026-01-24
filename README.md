@@ -14,16 +14,21 @@
 
 ## Executive Summary
 
-> **This is a learning repository** demonstrating modern CI/CD practices with a simple Python calculator.
+> **This is a learning repository** that walks you through a clean, real-world CI/CD flow using a tiny Python calculator.
 
-| What You'll Learn | Tools Used |
-|-------------------|------------|
-| Parallel & sequential CI jobs | GitHub Actions |
-| Test coverage enforcement | pytest + Codecov |
-| Security scanning | CodeQL + Bandit + Gitleaks |
-| Enterprise test reporting | Allure with history |
-| AI-assisted code review | GitHub Copilot |
-| Pre-commit quality gates | pre-commit + Ruff |
+**Simple Version (ELI5)**: Think of it like a school project with a smart checklist:
+1. **Developer Flow**: You make changes on your computer and run the calculator/tests.
+2. **Pre-commit Hooks**: A friendly gatekeeper checks your work before it gets saved.
+3. **PR Review + CI Workflows**: A robot team re-checks everything in GitHub before merge.
+4. **Internal CI Tweaks**: Extra speed + reporting tricks make the robot team fast and helpful.
+
+**Technical Version (for developers)**:
+| Stage | What Happens | Tools Used |
+|-------|--------------|------------|
+| Developer flow | Local dev + tests before push | Python + pytest |
+| Pre-commit hooks | Security + linting + formatting | pre-commit + Ruff + Gitleaks |
+| PR review & CI workflows | Parallel/sequential jobs, coverage & security gates | GitHub Actions + Codecov + CodeQL + Bandit |
+| Internal CI tweaks | Caching + report history + artifacts | Actions cache + Allure + GitHub Pages |
 
 **Live Demo**: [Test Reports on GitHub Pages](https://guitaristforever.github.io/simple-calculator-demo/)
 
@@ -31,20 +36,30 @@
 
 ## Table of Contents
 
-- [Executive Summary](#executive-summary)
-- [Features](#features)
-- [How It Works](#how-it-works-the-simple-version)
-- [Architecture](#architecture)
-- [Feature Tracker](#feature-tracker)
-- [Quick Start](#quick-start)
-- [Pre-commit Hooks](#pre-commit-hooks)
-- [Usage Examples](#usage-examples)
-- [CI/CD Pipeline](#cicd-pipeline)
-  - [How It Works](#how-it-works-simple-version)
-  - [Learning Insights](#cicd-learning-insights)
-- [Project Structure](#project-structure)
-- [Contributing](#contributing)
-- [License](#license)
+- [Simple Calculator App](#simple-calculator-app)
+  - [Executive Summary](#executive-summary)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+  - [How It Works (The Simple Version)](#how-it-works-the-simple-version)
+  - [Architecture](#architecture)
+  - [Feature Tracker](#feature-tracker)
+  - [Quick Start](#quick-start)
+    - [Install Dependencies](#install-dependencies)
+    - [Run the Calculator](#run-the-calculator)
+    - [Run Tests](#run-tests)
+  - [Pre-commit Hooks](#pre-commit-hooks)
+    - [What's Protected](#whats-protected)
+  - [Usage Examples](#usage-examples)
+    - [Basic Operations](#basic-operations)
+    - [Interactive Mode](#interactive-mode)
+  - [CI/CD Pipeline](#cicd-pipeline)
+    - [How It Works (Simple Version)](#how-it-works-simple-version)
+    - [The Complete Process](#the-complete-process)
+    - [CI/CD Learning Insights](#cicd-learning-insights)
+      - [Pipeline Architecture](#pipeline-architecture)
+  - [Project Structure](#project-structure)
+  - [Contributing](#contributing)
+  - [License](#license)
 
 ---
 

@@ -284,7 +284,8 @@ simple-calculator/
 │   └── workflows/
 │       └── tests.yml        # CI/CD automation
 ├── .copilot-instructions.md # 🤖 AI guidance
-├── .cursorrules             # Cursor IDE rules
+├── .rules/                  # Cursor rule files (mdc)
+│   └── calculator-project.mdc
 ├── .gitignore
 ├── pyproject.toml           # Modern config
 ├── pytest.ini               # Legacy pytest config
@@ -348,8 +349,8 @@ Examples:
 **Purpose**: Guide GitHub Copilot
 **Content**: Project rules, philosophy, workflow
 
-### .cursorrules
-**Purpose**: Guide Cursor IDE
+### .rules/*.mdc
+**Purpose**: Guide Cursor IDE (mdc rule files)
 **Content**: Code style, architecture principles, feature tracker updates
 
 **Why These Matter**:
