@@ -10,6 +10,44 @@
   A basic Python calculator to demonstrate simple CI/CD concepts with GitHub Actions.
 </div>
 
+---
+
+## Executive Summary
+
+> **This is a learning repository** demonstrating modern CI/CD practices with a simple Python calculator.
+
+| What You'll Learn | Tools Used |
+|-------------------|------------|
+| Parallel & sequential CI jobs | GitHub Actions |
+| Test coverage enforcement | pytest + Codecov |
+| Security scanning | CodeQL + Bandit + Gitleaks |
+| Enterprise test reporting | Allure with history |
+| AI-assisted code review | GitHub Copilot |
+| Pre-commit quality gates | pre-commit + Ruff |
+
+**Live Demo**: [Test Reports on GitHub Pages](https://guitaristforever.github.io/simple-calculator-demo/)
+
+---
+
+## Table of Contents
+
+- [Executive Summary](#executive-summary)
+- [Features](#features)
+- [How It Works](#how-it-works-the-simple-version)
+- [Architecture](#architecture)
+- [Feature Tracker](#feature-tracker)
+- [Quick Start](#quick-start)
+- [Pre-commit Hooks](#pre-commit-hooks)
+- [Usage Examples](#usage-examples)
+- [CI/CD Pipeline](#cicd-pipeline)
+  - [How It Works](#how-it-works-simple-version)
+  - [Learning Insights](#cicd-learning-insights)
+- [Project Structure](#project-structure)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
 ## Features
 
 - Basic arithmetic operations (add, subtract, multiply, divide)
