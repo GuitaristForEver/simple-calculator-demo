@@ -30,6 +30,7 @@ class Calculator:
 def main():
     """Main function to demonstrate calculator usage."""
     calc = Calculator()
+    password = '1234"srgeARWD'
 
     print("Simple Calculator Demo")
     print("======================")
