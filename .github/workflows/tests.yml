@@ -395,7 +395,7 @@ jobs:
           mkdir -p _site
 
           # Copy landing page
-          cp index.html _site/
+          cp docs/index.html _site/
           echo "✅ Copied landing page"
 
           # Copy learning UI
@@ -421,8 +421,8 @@ jobs:
             exit 1
           fi
 
-          # Copy assets
-          cp -r assets _site/
+          # Copy assets (now in docs/assets)
+          cp -r docs/assets _site/
           echo "✅ Copied assets"
 
           # Copy guides for relative links from learning UI

@@ -54,6 +54,25 @@ Once all tests pass AND pre-commit returns exit code 0:
 git commit -m "descriptive commit message"
 ```
 
+### Step 6: Push (Optional)
+If user wants to push changes:
+```bash
+git push
+```
+
+### Step 7: Check GitHub Actions (After Push)
+After pushing, check if CI/CD pipelines pass:
+```bash
+gh run list --limit 5
+```
+- Monitor the triggered workflows
+- Wait ~30-60 seconds and check status again if in progress
+- If any workflow fails, investigate with:
+```bash
+gh run view <run-id> --log-failed
+```
+- Report failures to the user with details
+
 ## AI Assistant Instructions
 
 When the user asks to commit or when you're ready to commit changes:
@@ -65,6 +84,14 @@ When the user asks to commit or when you're ready to commit changes:
 5. **NEVER** commit if pre-commit exits with code 1
 6. **ALWAYS** check the exit code and act accordingly
 7. If tests or pre-commit fail twice, explain the issue to the user
+
+**After Pushing (Steps 6-7):**
+- When user says "push" or "deploy", execute git push
+- **ALWAYS** check GitHub Actions runs after pushing
+- Wait 30-60 seconds and check status with `gh run list --limit 5`
+- If workflows fail, investigate with `gh run view <run-id> --log-failed`
+- Report any failures to the user with clear details
+- Offer to fix issues if CI/CD fails
 
 **Testing Options:**
 - **Preferred:** `tox -e fast` (isolated environment, fast)
@@ -100,7 +127,7 @@ Trigger this workflow when:
 ## Example Execution
 
 ```bash
-# User says: "commit this"
+# User says: "commit and push this"
 
 # Step 1: Run tests (MANDATORY)
 pytest
@@ -122,6 +149,21 @@ pre-commit run --all-files
 # Step 5: Commit
 git commit -m "Fix broken images and optimize assets"
 # → Success! ✅
+
+# Step 6: Push
+git push
+# → Pushed to remote ✅
+
+# Step 7: Check GitHub Actions
+gh run list --limit 5
+# → Shows triggered workflows
+
+# Wait 30-60 seconds...
+gh run list --limit 5
+# → Check if workflows completed successfully
+# → If any failed, investigate:
+gh run view <run-id> --log-failed
+# → Report issue to user and offer to fix
 ```
 
 **If tests fail:**
@@ -134,4 +176,19 @@ pytest
 # Fix the failing test first
 # Re-run tests until they pass
 # Then continue with Step 2
+```
+
+**If GitHub Actions fail:**
+```bash
+# Step 7: Check shows failure
+gh run list --limit 5
+# → "Deploy Learning UI" failed
+
+# Investigate
+gh run view 21689736165 --log-failed
+# → Shows: "cp: cannot stat 'index.html': No such file or directory"
+
+# Fix the issue (e.g., update workflow file)
+# Commit and push the fix
+# Check again until all workflows pass ✅
 ```
