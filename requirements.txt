@@ -3,6 +3,7 @@ pytest>=7.4.0
 pytest-cov>=4.1.0  # Test coverage reports
 pytest-html>=3.2.0  # HTML test reports
 allure-pytest>=2.13.0  # Enterprise-level test reporting with trends
+tox>=4.0.0  # Test automation in multiple environments
 
 # Code Quality & Security
 pre-commit>=3.6.0  # Git hooks for code quality checks

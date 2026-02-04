@@ -62,12 +62,16 @@ This is a simple Python calculator project with a focus on clean architecture, m
 
 1. **Implement** - Write the feature code
 2. **Test** - Create comprehensive tests
-3. **Document** - Update README Feature Tracker table
-4. **Verify** - Check architecture diagram needs updates
-5. **Pre-commit** - Run pre-commit hooks (see pre-commit-hook.mdc for details)
-6. **Commit** - Use clear commit messages
+3. **Verify Tests** - Run tests locally (`pytest` or `tox -e fast`)
+4. **Document** - Update README Feature Tracker table
+5. **Verify** - Check architecture diagram needs updates
+6. **Run Tests** - Execute full test suite (MANDATORY before commit)
+7. **Pre-commit** - Run pre-commit hooks (see pre-commit-hook.mdc for details)
+8. **Commit** - Use clear commit messages
 
-**Note:** Step 5 (Pre-commit) follows the flawless workflow defined in `.rules/pre-commit-hook.mdc`
+**Note:** Steps 6-8 follow the flawless workflow defined in `.rules/pre-commit-hook.mdc`
+
+**Critical:** Tests MUST pass before committing. Use `tox -e fast` for quick isolated testing or `pytest` for local testing.
 
 ## File Organization
 

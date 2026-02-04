@@ -10,33 +10,46 @@ Always run pre-commit hooks before making any git commits or when making file ch
 
 **BEFORE EVERY COMMIT, execute these exact steps in order:**
 
-### Step 1: Stage All Changes
+### Step 1: Run Tests (MANDATORY)
+```bash
+tox -e fast
+```
+**OR for quick local testing:**
+```bash
+pytest
+```
+- Tests MUST pass before proceeding
+- Exit code 0 = Tests passed → Continue to Step 2
+- Exit code 1 = Tests failed → STOP and fix tests
+- **NEVER skip this step** - failing tests = do not commit
+
+### Step 2: Stage All Changes
 ```bash
 git add .
 ```
 - Stage ALL files including new/modified/deleted
 - This ensures pre-commit checks everything
 
-### Step 2: Run Pre-Commit (First Pass)
+### Step 3: Run Pre-Commit (First Pass)
 ```bash
 pre-commit run --all-files
 ```
-- Exit code 0 = All passed → Go to Step 4
-- Exit code 1 = Auto-fixes applied → Go to Step 3
+- Exit code 0 = All passed → Go to Step 5
+- Exit code 1 = Auto-fixes applied → Go to Step 4
 
-### Step 3: Stage Auto-Fixes and Re-Run
-If Step 2 failed (exit code 1):
+### Step 4: Stage Auto-Fixes and Re-Run
+If Step 3 failed (exit code 1):
 ```bash
 git add -u
 pre-commit run --all-files
 ```
 - `git add -u` stages the auto-fixed files
 - Re-run pre-commit to verify
-- Exit code 0 = All passed → Go to Step 4
+- Exit code 0 = All passed → Go to Step 5
 - Exit code 1 = Still failing → Report error to user
 
-### Step 4: Commit
-Once pre-commit returns exit code 0:
+### Step 5: Commit
+Once all tests pass AND pre-commit returns exit code 0:
 ```bash
 git commit -m "descriptive commit message"
 ```
@@ -45,11 +58,18 @@ git commit -m "descriptive commit message"
 
 When the user asks to commit or when you're ready to commit changes:
 
-1. **ALWAYS** execute Steps 1-4 above in sequence
-2. **NEVER** skip the loop (Step 3) if pre-commit modifies files
-3. **NEVER** commit if pre-commit exits with code 1
-4. **ALWAYS** check the exit code and act accordingly
-5. If pre-commit fails twice, explain the issue to the user
+1. **ALWAYS** run tests FIRST (Step 1) - This is mandatory, no exceptions
+2. **NEVER** proceed if tests fail - Fix tests before continuing
+3. **ALWAYS** execute Steps 1-5 above in sequence
+4. **NEVER** skip the loop (Step 4) if pre-commit modifies files
+5. **NEVER** commit if pre-commit exits with code 1
+6. **ALWAYS** check the exit code and act accordingly
+7. If tests or pre-commit fail twice, explain the issue to the user
+
+**Testing Options:**
+- **Preferred:** `tox -e fast` (isolated environment, fast)
+- **Alternative:** `pytest` (quick local test)
+- **Full coverage:** `tox -e coverage` (for major changes)
 
 ## Exit Code Handling
 
@@ -82,19 +102,36 @@ Trigger this workflow when:
 ```bash
 # User says: "commit this"
 
-# Step 1: Stage everything
+# Step 1: Run tests (MANDATORY)
+pytest
+# → Exit code 0 (all tests passed!) ✅
+# OR: tox -e fast
+
+# Step 2: Stage everything
 git add .
 
-# Step 2: First run
+# Step 3: First run
 pre-commit run --all-files
 # → Exit code 1 (trailing whitespace fixed)
 
-# Step 3: Stage fixes and retry
+# Step 4: Stage fixes and retry
 git add -u
 pre-commit run --all-files
 # → Exit code 0 (success!)
 
-# Step 4: Commit
+# Step 5: Commit
 git commit -m "Fix broken images and optimize assets"
 # → Success! ✅
+```
+
+**If tests fail:**
+```bash
+# Step 1: Run tests
+pytest
+# → Exit code 1 (test_calculator.py::test_divide FAILED)
+
+# STOP! Do not proceed
+# Fix the failing test first
+# Re-run tests until they pass
+# Then continue with Step 2
 ```
