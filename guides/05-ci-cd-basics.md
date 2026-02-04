@@ -261,7 +261,7 @@ After workflow completes:
 
 ### Challenge 3: Break a Test
 
-1. Change `return a + b` to `return a - b` in calculator
+1. Change `return a + b` to `return a - b` in src/calculator.py
 2. Push the change
 3. Watch CI catch the error!
 4. Fix it and push again

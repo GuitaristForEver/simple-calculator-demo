@@ -34,7 +34,7 @@ minversion = "3.8"
 
 [tool.coverage.run]
 # Coverage configuration
-source = ["calculator"]
+source = ["src"]
 omit = ["tests/*"]
 
 [tool.coverage.report]

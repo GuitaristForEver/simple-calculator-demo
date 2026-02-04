@@ -14,7 +14,7 @@ It's a **teaching project** that shows how professional software is built, teste
 
 ### Core Application
 ```python
-calculator/
+src/
   ├── __init__.py          # Package initialization
   └── calculator.py        # Calculator class with 4 operations + safety
 ```
@@ -130,7 +130,7 @@ uv:   Install 10 packages in 0.3s  ⚡
 
 **How to use**:
 ```bash
-uv pip install -e ".[dev]"  # Fast!
+uv sync --dev  # Fast! Uses modern uv commands
 ```
 
 ---
@@ -262,7 +262,7 @@ Located in README.md for visibility.
 
 ```
 simple-calculator/
-├── calculator/              # 🧠 App code
+├── src/                     # 🧠 App code
 │   ├── __init__.py
 │   └── calculator.py
 ├── tests/                   # ✅ Test code

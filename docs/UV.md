@@ -55,16 +55,18 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 ### Install Dependencies
 ```bash
 # Install development dependencies (includes pytest)
-uv pip install -e ".[dev]"
-
-# Or just sync everything
+# This creates a virtual environment automatically and installs everything
 uv sync --dev
 ```
 
 ### Install Individual Packages
 ```bash
-uv pip install pytest
-uv pip install pytest-cov
+# Add packages to the project
+uv add pytest
+uv add pytest-cov
+
+# Or install temporarily without adding to project
+uv pip install pytest  # For one-off installs
 ```
 
 ### Run Tests (after installing)
@@ -103,15 +105,15 @@ dev = ["pytest>=7.4.0", "pytest-cov>=4.1.0"]
 
 ## Quick Command Comparison
 
-| Task | pip | uv |
-|------|-----|-----|
-| Install package | `pip install pytest` | `uv pip install pytest` |
-| Install from file | `pip install -r requirements.txt` | `uv pip install -r requirements.txt` |
-| Install project | `pip install -e .` | `uv pip install -e .` |
-| Install dev deps | `pip install -e ".[dev]"` | `uv pip install -e ".[dev]"` |
-| Create venv | `python -m venv .venv` | `uv venv` |
+| Task | pip | uv (modern) | uv (legacy) |
+|------|-----|-------------|-------------|
+| Install from pyproject.toml | `pip install -e ".[dev]"` | `uv sync --dev` | `uv pip install -e ".[dev]"` |
+| Install from requirements.txt | `pip install -r requirements.txt` | `uv pip install -r requirements.txt` | Same |
+| Add package | `pip install pytest` | `uv add pytest` | `uv pip install pytest` |
+| Run command | `pytest` | `uv run pytest` | `pytest` (after install) |
+| Create venv | `python -m venv .venv` | `uv venv` | Same |
 
-Notice: Just add `uv` before `pip` commands! That's it!
+**Modern uv approach**: Use `uv sync` for project dependencies and `uv run` for commands!
 
 ## Why This Matters for Well-Architected Software
 

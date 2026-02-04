@@ -169,7 +169,7 @@ uses: github/codeql-action/analyze@v4
 
 **C. Check pytest coverage flags**:
 ```yaml
-pytest --cov=calculator --cov-report=xml
+pytest --cov=src --cov-report=xml
 ```
 
 **D. Token not required for public repos**:
@@ -196,7 +196,7 @@ For public repos, you can remove the token:
 **A. Check what's not covered**:
 ```bash
 # Run locally with HTML report
-pytest --cov=calculator --cov-report=html
+pytest --cov=src --cov-report=html
 open htmlcov/index.html  # macOS
 # or: xdg-open htmlcov/index.html  # Linux
 ```

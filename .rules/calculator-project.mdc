@@ -76,7 +76,7 @@ This is a simple Python calculator project with a focus on clean architecture, m
 ## File Organization
 
 Current structure:
-- `calculator/calculator.py` - Main Calculator class
+- `src/calculator.py` - Main Calculator class
 - `tests/test_calculator.py` - All tests
 - `README.md` - Main documentation with Feature Tracker
 - `requirements.txt` - Dependencies

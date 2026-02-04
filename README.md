@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="assets/logo.png" alt="Calculator Robot" width="400">
+  <img src="docs/assets/logo.png" alt="Calculator Robot" width="400">
 
   # Simple Calculator App
 
@@ -121,20 +121,42 @@ Follow the **step-by-step guides** in order:
 For those who want to jump right in:
 
 ### Install & Run
+
+**Option A: Using pip (traditional)**
 ```bash
-# Install
+# Install dependencies
 pip install -r requirements.txt
 
 # Run calculator
-python -m calculator.calculator
+python -m src.calculator
 
 # Run tests
 pytest
 ```
 
+**Option B: Using uv (modern & fast) ⚡**
+```bash
+# Install dependencies (creates venv automatically)
+uv sync --dev
+
+# Run calculator
+uv run python -m src.calculator
+
+# Run tests
+uv run pytest
+```
+
 ### Pre-commit Hooks
+
+**Option A: Using pip**
 ```bash
 pip install pre-commit
+pre-commit install
+```
+
+**Option B: Using uv**
+```bash
+uv sync --dev  # Includes pre-commit
 pre-commit install
 ```
 
@@ -274,12 +296,12 @@ test:
 ```
 simple-calculator/
 ├── guides/              # 📖 Step-by-step learning (START HERE!)
-├── calculator/          # 🧠 Calculator code
+├── src/                 # 🧠 Calculator code
 ├── tests/               # ✅ Test code
 ├── docs/                # 📚 Deep-dive documentation
+│   └── assets/          # 🎨 Images
 ├── .github/workflows/   # 🤖 CI/CD automation
-├── prompts/             # 🧩 Copy-paste CI/CD prompts
-└── assets/              # 🎨 Images
+└── prompts/             # 🧩 Copy-paste CI/CD prompts
 ```
 
 See [`docs/STRUCTURE.md`](docs/STRUCTURE.md) for details.

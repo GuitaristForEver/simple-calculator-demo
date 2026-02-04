@@ -110,13 +110,13 @@ check for added large files....................Passed
 Let's say you accidentally add an API key:
 
 ```python
-# calculator.py
+# src/calculator.py
 API_KEY = "put-your-secret-here"  # Oops! (This is a demo placeholder)
 ```
 
 ### Try to commit:
 ```bash
-git add calculator.py
+git add src/calculator.py
 git commit -m "Update calculator"
 ```
 
@@ -134,7 +134,7 @@ Gitleaks........................................Failed
 
 Finding:     sk-1234567890abcdef
 Secret:      Generic API Key
-File:        calculator.py
+File:        src/calculator.py
 Line:        2
 Commit:      (unstaged)
 ```
@@ -155,7 +155,7 @@ def   add( a,b ):
 
 ### Commit it:
 ```bash
-git add calculator.py
+git add src/calculator.py
 git commit -m "Add function"
 ```
 
@@ -165,7 +165,7 @@ ruff-formatter.................................Failed
 - hook id: ruff-formatter
 - files were modified by this hook
 
-Fixed calculator.py
+Fixed src/calculator.py
 ```
 
 **Your code is auto-formatted to:**

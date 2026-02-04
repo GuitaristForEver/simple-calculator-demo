@@ -49,10 +49,15 @@ Allure shows professional practices:
 ## Quick Start
 
 ### 1. Install Dependencies
+
+**Option A: Using pip**
 ```bash
 pip install -r requirements.txt
-# or
-uv pip install -e ".[dev]"
+```
+
+**Option B: Using uv (modern & fast) ⚡**
+```bash
+uv sync --dev
 ```
 
 ### 2. Run Tests with Allure

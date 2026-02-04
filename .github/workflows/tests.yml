@@ -178,8 +178,8 @@ jobs:
       - name: Run Bandit (code security)
         id: bandit
         run: |
-          bandit -r calculator/ -f json -o bandit-report.json || true
-          bandit -r calculator/ -ll -ii
+          bandit -r src/ -f json -o bandit-report.json || true
+          bandit -r src/ -ll -ii
 
       # Safety checks if your dependencies have known vulnerabilities
       # continue-on-error: true = don't fail the whole pipeline for warnings
@@ -224,7 +224,7 @@ jobs:
   # │ - If either fails, this job is skipped (why run tests on bad code?)     │
   # │                                                                         │
   # │ 📊 COVERAGE EXPLAINED:                                                  │
-  # │ - --cov=calculator = Measure which lines of code are tested             │
+  # │ - --cov=src = Measure which lines of code are tested                     │
   # │ - --cov-fail-under=80 = FAIL if less than 80% of code is tested         │
   # │ - 80% is arbitrary - teams choose 70-90% typically                      │
   # │                                                                         │
@@ -280,7 +280,7 @@ jobs:
       - name: Run tests with coverage
         id: test-step
         run: |
-          pytest --cov=calculator --cov-report=xml --cov-report=term --cov-fail-under=80 --alluredir=allure-results -v
+          pytest --cov=src --cov-report=xml --cov-report=term --cov-fail-under=80 --alluredir=allure-results -v
 
       # Upload coverage to Codecov (external service for tracking trends)
       - name: Upload coverage to Codecov

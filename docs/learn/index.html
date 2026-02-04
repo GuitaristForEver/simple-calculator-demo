@@ -31,7 +31,7 @@
             </p>
             <div class="actions">
               <a class="btn primary" href="https://github.com/GuitaristForEver/simple-calculator-demo/blob/main/guides/01-getting-started.md">Start Here</a>
-              <a class="btn ghost" href="../../reports/pytest_html_report.html" target="_blank">📊 Test Reports</a>
+              <a class="btn ghost" href="https://guitaristforever.github.io/simple-calculator-demo/allure/" target="_blank">📊 Test Reports</a>
             </div>
             <div class="stats">
               <div class="stat">
@@ -140,14 +140,15 @@
             <h2>Quick Start</h2>
             <span class="chip">Terminal</span>
           </div>
-          <pre class="code" data-copy-target><code># Install dependencies
+          <pre class="code" data-copy-target><code># Option A: Using pip
 pip install -r requirements.txt
+python -m src.calculator
+pytest
 
-# Run the calculator
-python -m calculator.calculator
-
-# Run tests
-pytest</code></pre>
+# Option B: Using uv (faster) ⚡
+uv sync --dev
+uv run python -m src.calculator
+uv run pytest</code></pre>
           <div class="card-actions">
             <button class="btn primary" type="button" data-copy>Copy Commands</button>
             <span class="copy-status" data-copy-status aria-live="polite"></span>
@@ -284,7 +285,7 @@ pytest</code></pre>
               <span class="map-note">Step-by-step learning path.</span>
             </li>
             <li>
-              <span class="map-path">calculator/</span>
+              <span class="map-path">src/</span>
               <span class="map-note">Core Python calculator logic.</span>
             </li>
             <li>

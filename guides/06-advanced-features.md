@@ -69,7 +69,7 @@ Shows at a glance:
 ### Suites Tab
 Tests organized by file/class:
 ```
-calculator/
+tests/
 └── test_calculator.py
     ├── test_add ✅
     ├── test_subtract ✅
@@ -216,7 +216,7 @@ Job 3: Download Python packages (30s) + Run tests (0.12s) = 30.12s
 
 **Example:**
 ```
-calculator.py:  100% covered ✅
+src/calculator.py:  100% covered ✅
 tests/:         100% covered ✅
 Total:          95% covered  ✅
 ```

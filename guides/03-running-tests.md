@@ -119,8 +119,8 @@ Output:
 ---------- coverage: platform darwin, python 3.9.7 -----------
 Name                       Stmts   Miss  Cover
 ----------------------------------------------
-calculator/__init__.py         1      0   100%
-calculator/calculator.py      20      5    75%
+src/__init__.py         1      0   100%
+src/calculator.py      20      5    75%
 ----------------------------------------------
 TOTAL                         21      5    76%
 ```
@@ -188,7 +188,7 @@ def test_add(calc):
 ## Try It Yourself!
 
 ### Challenge 1: Break a Test
-1. Open `calculator/calculator.py`
+1. Open `src/calculator.py`
 2. Change `return a + b` to `return a - b` in the `add` method
 3. Run `pytest`
 4. See the test fail! 🔴

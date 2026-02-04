@@ -29,21 +29,21 @@ That's it! But let's see how it's built...
 ## The Code Structure
 
 ```
-calculator/
+src/
 ├── __init__.py       # Makes it a Python package
 └── calculator.py     # All the calculator logic
 ```
 
 **Why a package?** So you can import it anywhere:
 ```python
-from calculator import Calculator
+from src import Calculator
 ```
 
 ---
 
 ## The Calculator Class
 
-Open `calculator/calculator.py` and you'll see:
+Open `src/calculator.py` and you'll see:
 
 ```python
 class Calculator:
@@ -103,7 +103,7 @@ All related operations are in one class, not scattered everywhere.
 ### ✅ Reusable
 You can use the Calculator class anywhere:
 ```python
-from calculator import Calculator
+from src import Calculator
 
 calc = Calculator()
 result = calc.add(10, 5)  # Returns 15
@@ -122,7 +122,7 @@ Division by zero is caught before it crashes your program.
 ### Basic Usage
 
 ```python
-from calculator import Calculator
+from src import Calculator
 
 calc = Calculator()
 
@@ -158,7 +158,7 @@ except ValueError as e:
 ## Interactive Mode (Bonus)
 
 The `if __name__ == "__main__":` block at the bottom:
-- Runs when you call `python -m calculator.calculator`
+- Runs when you call `python -m src.calculator`
 - Shows a demo
 - Starts interactive mode
 
@@ -179,7 +179,7 @@ This is how **professional Python projects** are built! 🎯
 
 ## Try It Yourself!
 
-Open `calculator/calculator.py` in your editor and:
+Open `src/calculator.py` in your editor and:
 1. Find the `add` method
 2. Find the `divide` method
 3. See the safety check for division by zero

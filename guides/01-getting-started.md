@@ -30,7 +30,7 @@ This is the classic way. Works everywhere!
 ### Option B: Modern & Fast (uv) ⚡
 
 ```bash
-uv pip install -e ".[dev]"
+uv sync --dev
 ```
 
 **What's uv?** A super-fast Python package manager (10-100x faster than pip!). See [`docs/UV.md`](../docs/UV.md) for details.
@@ -42,7 +42,7 @@ uv pip install -e ".[dev]"
 ## Step 2: Run the Calculator
 
 ```bash
-python -m calculator.calculator
+python -m src.calculator
 ```
 
 **What happens?**
@@ -93,8 +93,8 @@ Enter operation: quit
 
 ## What Just Happened?
 
-You ran a Python **module** (`-m calculator.calculator`). This means:
-- Python found the `calculator` package
+You ran a Python **module** (`-m src.calculator`). This means:
+- Python found the `src` package
 - Ran the `calculator.py` file inside it
 - Showed you a demo and interactive mode
 
@@ -107,14 +107,21 @@ You ran a Python **module** (`-m calculator.calculator`). This means:
 **Solution**: Make sure you're in the project root directory:
 ```bash
 cd simple-calculator
-python -m calculator.calculator
+python -m src.calculator
 ```
 
 ### Error: "No module named 'pytest'"
 
 **Solution**: Install dependencies first:
+
+**Option A: Using pip**
 ```bash
 pip install -r requirements.txt
+```
+
+**Option B: Using uv**
+```bash
+uv sync --dev
 ```
 
 ---

@@ -7,7 +7,7 @@ Now using pytest with Allure for enterprise-level reporting!
 import allure
 import pytest
 
-from calculator import Calculator
+from src import Calculator
 
 
 @pytest.fixture
