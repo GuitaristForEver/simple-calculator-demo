@@ -6,55 +6,95 @@ alwaysApply: true
 
 Always run pre-commit hooks before making any git commits or when making file changes.
 
-## Flawless Commit Workflow
+## Flawless Commit Workflow - MANDATORY STEPS
 
-**ALWAYS use this workflow before committing:**
+**BEFORE EVERY COMMIT, execute these exact steps in order:**
 
-1. Stage all changes (including new files):
-   ```bash
-   git add .
-   ```
-
-2. Run pre-commit hooks (this will auto-fix issues):
-   ```bash
-   pre-commit run --all-files
-   ```
-
-3. If hooks modified files (exit code 1), stage the auto-fixes and re-run:
-   ```bash
-   git add -u
-   pre-commit run --all-files
-   ```
-
-4. Once all hooks pass (exit code 0), commit:
-   ```bash
-   git commit -m "your message"
-   ```
-
-## Automated Script
-
-You can use the automated script:
+### Step 1: Stage All Changes
 ```bash
-./.rules/commit-workflow.sh
+git add .
+```
+- Stage ALL files including new/modified/deleted
+- This ensures pre-commit checks everything
+
+### Step 2: Run Pre-Commit (First Pass)
+```bash
+pre-commit run --all-files
+```
+- Exit code 0 = All passed → Go to Step 4
+- Exit code 1 = Auto-fixes applied → Go to Step 3
+
+### Step 3: Stage Auto-Fixes and Re-Run
+If Step 2 failed (exit code 1):
+```bash
+git add -u
+pre-commit run --all-files
+```
+- `git add -u` stages the auto-fixed files
+- Re-run pre-commit to verify
+- Exit code 0 = All passed → Go to Step 4
+- Exit code 1 = Still failing → Report error to user
+
+### Step 4: Commit
+Once pre-commit returns exit code 0:
+```bash
+git commit -m "descriptive commit message"
 ```
 
-This script automatically handles the loop of running pre-commit, staging fixes, and verifying.
+## AI Assistant Instructions
 
-## Important Notes
+When the user asks to commit or when you're ready to commit changes:
 
-- **Never commit** until pre-commit exits with code 0
-- **Always stage auto-fixes** before retrying
-- **Check new/modified files** by staging them first
-- Pre-commit hooks that auto-fix (trailing whitespace, end-of-file, etc.) will modify files and return exit code 1 even though they fixed the issue - this is expected!
+1. **ALWAYS** execute Steps 1-4 above in sequence
+2. **NEVER** skip the loop (Step 3) if pre-commit modifies files
+3. **NEVER** commit if pre-commit exits with code 1
+4. **ALWAYS** check the exit code and act accordingly
+5. If pre-commit fails twice, explain the issue to the user
 
-## When to Run
+## Exit Code Handling
 
-- ✅ After editing any Python files
-- ✅ After editing YAML, JSON, or TOML files
-- ✅ Before any git commit operation
-- ✅ When adding new files to the repository
-- ✅ After making changes that the user asks to commit
+Understanding pre-commit exit codes is critical:
 
-## Never Skip
+- **Exit Code 0** = Success, all checks passed → Safe to commit
+- **Exit Code 1** = Either:
+  - Auto-fixes were applied (trailing whitespace, end-of-file, etc.) → Stage and re-run
+  - OR validation failed (syntax errors, large files, secrets) → Fix manually
 
-Do not use `--no-verify` or skip pre-commit hooks unless explicitly requested by the user.
+**The key:** After auto-fixes, you MUST stage them and re-run. Don't commit until you get exit code 0.
+
+## When This Rule Applies
+
+Trigger this workflow when:
+- ✅ User asks to commit changes
+- ✅ You're about to suggest `git commit`
+- ✅ After editing Python, YAML, JSON, TOML, or any tracked files
+- ✅ When user says "commit this" or similar
+
+## What NEVER to Do
+
+- ❌ NEVER commit with `--no-verify` (unless user explicitly requests)
+- ❌ NEVER skip the auto-fix loop (Step 3)
+- ❌ NEVER commit if pre-commit exits with code 1
+- ❌ NEVER assume files are clean without running pre-commit
+
+## Example Execution
+
+```bash
+# User says: "commit this"
+
+# Step 1: Stage everything
+git add .
+
+# Step 2: First run
+pre-commit run --all-files
+# → Exit code 1 (trailing whitespace fixed)
+
+# Step 3: Stage fixes and retry
+git add -u
+pre-commit run --all-files
+# → Exit code 0 (success!)
+
+# Step 4: Commit
+git commit -m "Fix broken images and optimize assets"
+# → Success! ✅
+```
