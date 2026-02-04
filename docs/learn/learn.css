@@ -38,7 +38,7 @@ body {
   width: 320px;
   height: 320px;
   border-radius: 999px;
-  filter: blur(0px);
+  filter: blur(80px);
   opacity: 0.6;
   mix-blend-mode: multiply;
   animation: drift 16s ease-in-out infinite;

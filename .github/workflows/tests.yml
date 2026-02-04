@@ -406,7 +406,7 @@ jobs:
           echo "🎉 Complete site structure ready!"
           echo ""
           echo "📂 Site structure:"
-          tree _site -L 2 || ls -la _site
+          ls -la _site
 
       # Prepare the complete site for GitHub Pages deployment
       - name: Upload artifact for GitHub Pages
