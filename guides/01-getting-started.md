@@ -33,7 +33,7 @@ This is the classic way. Works everywhere!
 uv sync --dev
 ```
 
-**What's uv?** A super-fast Python package manager (10-100x faster than pip!). See [`docs/UV.md`](../docs/UV.md) for details.
+**What's uv?** A super-fast Python package manager (10-100x faster than pip!). See [`docs/reference/UV.md`](../docs/reference/UV.md) for details.
 
 > **Tip**: If you don't have uv installed, stick with pip for now. You can try uv later!
 

@@ -16,7 +16,7 @@ Each guide builds on the previous one. Don't skip ahead!
 
 ### 3. Ask Questions
 - Stuck? Check the troubleshooting sections
-- Still stuck? See [`docs/TROUBLESHOOTING.md`](../docs/TROUBLESHOOTING.md)
+- Still stuck? See [`docs/troubleshooting/TROUBLESHOOTING.md`](../docs/troubleshooting/TROUBLESHOOTING.md)
 
 ---
 
@@ -108,8 +108,8 @@ Check off guides as you complete them:
 Once you've completed all guides, you can:
 
 ### Explore Deep Dives
-- Read [`docs/ARCHITECTURE.md`](../docs/ARCHITECTURE.md) for the complete system overview
-- Read [`docs/CI-CD.md`](../docs/CI-CD.md) for advanced CI/CD insights
+- Read [`docs/reference/ARCHITECTURE.md`](../docs/reference/ARCHITECTURE.md) for the complete system overview
+- Read [`docs/ci-cd/CI-CD.md`](../docs/ci-cd/CI-CD.md) for advanced CI/CD insights
 - Explore other docs in the [`docs/`](../docs/) folder
 
 ### Apply to Your Projects
@@ -126,7 +126,7 @@ Once you've completed all guides, you can:
 
 ## Need Help?
 
-- 🔧 Common issues: [`docs/TROUBLESHOOTING.md`](../docs/TROUBLESHOOTING.md)
+- 🔧 Common issues: [`docs/troubleshooting/TROUBLESHOOTING.md`](../docs/troubleshooting/TROUBLESHOOTING.md)
 - 🏠 Main README: [`README.md`](../README.md)
 - 📚 Documentation: [`docs/`](../docs/)
 

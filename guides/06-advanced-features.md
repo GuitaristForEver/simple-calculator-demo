@@ -123,7 +123,7 @@ Run 3: Pull gh-pages → Test results → Save → History: [Run1, Run2, Run3]
 
 Each run adds to history. That's how we get trends! 📈
 
-See [`docs/GITHUB-PAGES.md`](../docs/GITHUB-PAGES.md) for technical details.
+See [`docs/ci-cd/GITHUB-PAGES.md`](../docs/ci-cd/GITHUB-PAGES.md) for technical details.
 
 ---
 
@@ -245,7 +245,7 @@ Both must pass before code can merge:
 → Safe to merge!
 ```
 
-See [`docs/CI-CD.md`](../docs/CI-CD.md) Learning Insights for details.
+See [`docs/ci-cd/CI-CD.md`](../docs/ci-cd/CI-CD.md) Learning Insights for details.
 
 ---
 
@@ -376,10 +376,10 @@ This is **Stage 4** - the sophisticated internals! 🎯
 
 Want to dive deeper? Check out:
 
-- [`docs/ALLURE.md`](../docs/ALLURE.md) - Complete Allure guide
-- [`docs/CI-CD.md`](../docs/CI-CD.md) - Deep CI/CD insights
-- [`docs/GITHUB-PAGES.md`](../docs/GITHUB-PAGES.md) - GitHub Pages setup
-- [`docs/ARCHITECTURE.md`](../docs/ARCHITECTURE.md) - Complete system overview
+- [`docs/ci-cd/ALLURE.md`](../docs/ci-cd/ALLURE.md) - Complete Allure guide
+- [`docs/ci-cd/CI-CD.md`](../docs/ci-cd/CI-CD.md) - Deep CI/CD insights
+- [`docs/ci-cd/GITHUB-PAGES.md`](../docs/ci-cd/GITHUB-PAGES.md) - GitHub Pages setup
+- [`docs/reference/ARCHITECTURE.md`](../docs/reference/ARCHITECTURE.md) - Complete system overview
 
 ---
 

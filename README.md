@@ -304,7 +304,7 @@ simple-calculator/
 └── prompts/             # 🧩 Copy-paste CI/CD prompts
 ```
 
-See [`docs/STRUCTURE.md`](docs/STRUCTURE.md) for details.
+See [`docs/reference/STRUCTURE.md`](docs/reference/STRUCTURE.md) for details.
 
 ---
 
@@ -314,13 +314,13 @@ See [`docs/STRUCTURE.md`](docs/STRUCTURE.md) for details.
 - 📖 **[Learning Guides](guides/)** - Progressive 6-guide learning path (~70 min)
 
 ### For Deep Dives
-- 🏗️ **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** - Complete system overview
-- 🚀 **[CI-CD.md](docs/CI-CD.md)** - CI/CD insights & best practices
-- 📊 **[ALLURE.md](docs/ALLURE.md)** - Enterprise test reporting
-- 🌐 **[GITHUB-PAGES.md](docs/GITHUB-PAGES.md)** - Free hosting setup
-- 🧪 **[TESTING.md](docs/TESTING.md)** - pytest testing guide
-- ⚡ **[UV.md](docs/UV.md)** - Fast package manager
-- 🔧 **[TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)** - Common issues
+- 🏗️ **[ARCHITECTURE.md](docs/reference/ARCHITECTURE.md)** - Complete system overview
+- 🚀 **[CI-CD.md](docs/ci-cd/CI-CD.md)** - CI/CD insights & best practices
+- 📊 **[ALLURE.md](docs/ci-cd/ALLURE.md)** - Enterprise test reporting
+- 🌐 **[GITHUB-PAGES.md](docs/ci-cd/GITHUB-PAGES.md)** - Free hosting setup
+- 🧪 **[TESTING.md](docs/reference/TESTING.md)** - pytest testing guide
+- ⚡ **[UV.md](docs/reference/UV.md)** - Fast package manager
+- 🔧 **[TROUBLESHOOTING.md](docs/troubleshooting/TROUBLESHOOTING.md)** - Common issues
 
 ### For Your Projects
 - 🧩 **[Prompts](prompts/)** - Copy-paste CI/CD setup for your repos
