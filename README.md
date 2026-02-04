@@ -44,6 +44,7 @@
 - [Quick Start](#quick-start)
 - [Project Structure](#project-structure)
 - [Documentation](#documentation)
+- [🛠️ Awesome GitHub Tools](#awesome-github-tools)
 - [Contributing](#contributing)
 
 ---
@@ -301,6 +302,20 @@ See [`docs/STRUCTURE.md`](docs/STRUCTURE.md) for details.
 
 ### For Your Projects
 - 🧩 **[Prompts](prompts/)** - Copy-paste CI/CD setup for your repos
+
+---
+
+## Awesome GitHub Tools
+
+Enhance your GitHub workflow with these helpful tools:
+
+- 📱 **[GitHub Mobile App](https://github.com/mobile)** - Official GitHub app for iOS and Android. Manage repositories, review code, and respond to issues on the go.
+
+- 🎨 **[GitHub Material Design Chrome Extension](https://chromewebstore.google.com/detail/material-icons-for-github/bggfcpfjbdkhfhfmkjpbhnkhnpjjeomc)** - Apply Material Design styling to GitHub's interface for a modern, polished look.
+
+- ⚡ **[Refined GitHub](https://github.com/refined-github/refined-github)** - Browser extension that simplifies the GitHub interface and adds 200+ useful features including linkified references, reaction avatars, merge conflict fixers, and more. Available for [Chrome](https://chromewebstore.google.com/detail/refined-github/hlepfoohegkhhmjieoechaddaejaokhf) and [Firefox](https://addons.mozilla.org/en-US/firefox/addon/refined-github/).
+
+- 🤖 **[GitHub MCP](https://github.com/github/github-mcp-server)** - Model Context Protocol server for GitHub integration, enabling AI assistants to interact with GitHub repositories, issues, and pull requests through the MCP framework.
 
 ---
 
