@@ -361,11 +361,58 @@ jobs:
           allure_history: allure-history
           keep_reports: 20  # Keep last 20 reports (delete older ones)
 
-      # Prepare the report for GitHub Pages deployment
+      # ┌─────────────────────────────────────────────────────────────────────┐
+      # │ BUILD COMPLETE SITE STRUCTURE                                       │
+      # │                                                                     │
+      # │ 💡 COMBINING EVERYTHING:                                            │
+      # │ We build a site that includes:                                      │
+      # │ - Landing page at root (/)                                          │
+      # │ - Learning UI at /learn                                             │
+      # │ - Allure reports at /allure                                         │
+      # │ - Assets directory for shared resources                             │
+      # │                                                                     │
+      # │ This ensures the test deployment preserves the learning UI!         │
+      # └─────────────────────────────────────────────────────────────────────┘
+      - name: Build complete site structure
+        run: |
+          echo "📦 Building complete site with Allure at /allure..."
+          
+          # Create site directory
+          mkdir -p _site
+          
+          # Copy landing page
+          cp index.html _site/
+          echo "✅ Copied landing page"
+          
+          # Copy learning UI
+          cp -r docs/learn _site/
+          echo "✅ Copied learning UI"
+          
+          # Copy Allure reports to /allure subdirectory
+          mkdir -p _site/allure
+          cp -r allure-history/* _site/allure/
+          echo "✅ Copied Allure reports to /allure"
+          
+          # Copy assets
+          cp -r assets _site/
+          echo "✅ Copied assets"
+          
+          # Copy guides for relative links from learning UI
+          if [ -d "guides" ]; then
+            cp -r guides _site/
+            echo "✅ Copied guides"
+          fi
+          
+          echo "🎉 Complete site structure ready!"
+          echo ""
+          echo "📂 Site structure:"
+          ls -la _site
+
+      # Prepare the complete site for GitHub Pages deployment
       - name: Upload artifact for GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: allure-history
+          path: _site
 
   # ┌─────────────────────────────────────────────────────────────────────────┐
   # │ JOB 5: DEPLOY - Publish to GitHub Pages                                 │
@@ -404,4 +451,8 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "✅ **Successfully deployed to GitHub Pages!**" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "📊 View report: ${{ steps.deployment.outputs.page_url }}" >> $GITHUB_STEP_SUMMARY
+          echo "### 🔗 Links" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- 🏠 [Landing Page](${{ steps.deployment.outputs.page_url }})" >> $GITHUB_STEP_SUMMARY
+          echo "- 📊 [Allure Reports](${{ steps.deployment.outputs.page_url }}allure/)" >> $GITHUB_STEP_SUMMARY
+          echo "- 📚 [Learning UI](${{ steps.deployment.outputs.page_url }}learn/)" >> $GITHUB_STEP_SUMMARY

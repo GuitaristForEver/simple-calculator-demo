@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Simple Calculator - CI/CD Learning Project</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f6f2ea;
+        --bg-alt: #eef6ff;
+        --surface: rgba(255, 255, 255, 0.78);
+        --surface-strong: rgba(255, 255, 255, 0.92);
+        --text: #111827;
+        --muted: #4b5563;
+        --accent: #0ea5e9;
+        --accent-2: #f97316;
+        --accent-3: #22c55e;
+        --line: rgba(15, 23, 42, 0.12);
+        --shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+        --glow: 0 0 0 1px rgba(14, 165, 233, 0.2), 0 18px 30px rgba(14, 165, 233, 0.14);
+        --radius: 22px;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Space Grotesk", "Segoe UI Variable", "Avenir Next", sans-serif;
+        color: var(--text);
+        background: radial-gradient(circle at 10% 20%, var(--bg-alt) 0%, transparent 55%),
+          radial-gradient(circle at 90% 10%, #fde68a 0%, transparent 42%),
+          linear-gradient(135deg, var(--bg) 0%, #fdfaf5 55%, #f0f7ff 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .orb {
+        position: absolute;
+        width: 320px;
+        height: 320px;
+        border-radius: 999px;
+        filter: blur(80px);
+        opacity: 0.5;
+        mix-blend-mode: multiply;
+        animation: drift 16s ease-in-out infinite;
+        pointer-events: none;
+      }
+
+      .orb-1 {
+        top: -120px;
+        left: -80px;
+        background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+      }
+
+      .orb-2 {
+        bottom: -100px;
+        right: -60px;
+        background: linear-gradient(135deg, #f97316, #fb923c);
+        animation-delay: -8s;
+      }
+
+      @keyframes drift {
+        0%, 100% {
+          transform: translate(0, 0) scale(1);
+        }
+        33% {
+          transform: translate(30px, -30px) scale(1.1);
+        }
+        66% {
+          transform: translate(-20px, 20px) scale(0.9);
+        }
+      }
+
+      .container {
+        max-width: 900px;
+        width: 100%;
+        position: relative;
+        z-index: 1;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 4rem;
+      }
+
+      .logo {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 2rem;
+        animation: float 6s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%, 100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      .logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.1));
+      }
+
+      h1 {
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        font-weight: 700;
+        margin: 0 0 1rem;
+        line-height: 1.1;
+        background: linear-gradient(135deg, var(--text) 0%, var(--muted) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .subtitle {
+        font-size: 1.25rem;
+        color: var(--muted);
+        margin: 0;
+        font-weight: 500;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .card {
+        background: var(--surface);
+        backdrop-filter: blur(20px);
+        border-radius: var(--radius);
+        padding: 2.5rem;
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--accent), var(--accent-3));
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.3s ease;
+      }
+
+      .card:hover::before {
+        transform: scaleX(1);
+      }
+
+      .card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--glow);
+        background: var(--surface-strong);
+      }
+
+      .card-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: block;
+      }
+
+      .card h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 0 0 0.75rem;
+      }
+
+      .card p {
+        color: var(--muted);
+        margin: 0 0 1.5rem;
+        line-height: 1.6;
+        flex-grow: 1;
+      }
+
+      .card-footer {
+        display: flex;
+        align-items: center;
+        font-weight: 500;
+        color: var(--accent);
+      }
+
+      .card-footer svg {
+        margin-left: 0.5rem;
+        transition: transform 0.3s ease;
+      }
+
+      .card:hover .card-footer svg {
+        transform: translateX(4px);
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(14, 165, 233, 0.1);
+        color: var(--accent);
+        padding: 0.5rem 1rem;
+        border-radius: 999px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+      }
+
+      .badge-warning {
+        background: rgba(249, 115, 22, 0.1);
+        color: var(--accent-2);
+      }
+
+      footer {
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.875rem;
+        padding-top: 2rem;
+      }
+
+      footer a {
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      footer a:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 640px) {
+        .cards {
+          grid-template-columns: 1fr;
+        }
+
+        body {
+          padding: 1.5rem;
+        }
+
+        .header {
+          margin-bottom: 2.5rem;
+        }
+
+        .logo {
+          width: 90px;
+          height: 90px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="orb orb-1" aria-hidden="true"></div>
+    <div class="orb orb-2" aria-hidden="true"></div>
+
+    <div class="container">
+      <header class="header">
+        <div class="logo">
+          <img src="assets/logo.png" alt="Simple Calculator Logo" />
+        </div>
+        <h1>Simple Calculator</h1>
+        <p class="subtitle">CI/CD Learning Project & Test Reports</p>
+      </header>
+
+      <div class="cards">
+        <a href="learn/" class="card">
+          <span class="badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
+            Interactive
+          </span>
+          <span class="card-icon">📚</span>
+          <h2>Learning UI</h2>
+          <p>
+            Step-by-step guides to understand CI/CD workflows. Track your progress through
+            the learning path with an interactive interface.
+          </p>
+          <span class="card-footer">
+            Start Learning
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </span>
+        </a>
+
+        <a href="allure/" class="card">
+          <span class="badge badge-warning">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+            </svg>
+            Live Data
+          </span>
+          <span class="card-icon">📊</span>
+          <h2>Allure Reports</h2>
+          <p>
+            View detailed test results with historical trends, coverage metrics, and
+            failure analysis from the latest CI pipeline runs.
+          </p>
+          <span class="card-footer">
+            View Reports
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </span>
+        </a>
+      </div>
+
+      <footer>
+        <p>
+          Part of the
+          <a href="https://github.com/guitaristforever/simple-calculator-demo" target="_blank" rel="noopener">
+            Simple Calculator Demo
+          </a>
+          repository
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

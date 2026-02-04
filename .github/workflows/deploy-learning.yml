@@ -1,0 +1,194 @@
+# ╔═══════════════════════════════════════════════════════════════════════════╗
+# ║              🚀 LEARNING UI DEPLOYMENT - GITHUB PAGES                      ║
+# ╠═══════════════════════════════════════════════════════════════════════════╣
+# ║  This workflow deploys the learning UI and landing page to GitHub Pages.  ║
+# ║                                                                           ║
+# ║  🎯 WHAT THIS FILE DOES:                                                  ║
+# ║  1. Triggers when learning files or index.html change                     ║
+# ║  2. Builds the site structure (landing page + learning UI)                ║
+# ║  3. Deploys to GitHub Pages                                               ║
+# ║                                                                           ║
+# ║  📂 DEPLOYED STRUCTURE:                                                   ║
+# ║  /             → Landing page (index.html)                                ║
+# ║  /learn/       → Learning UI (docs/learn/)                                ║
+# ║  /assets/      → Shared assets (logo, images, etc.)                       ║
+# ║  /allure/      → Allure reports (managed by tests.yml)                    ║
+# ║                                                                           ║
+# ║  ⏱️  TOTAL TIME: ~30 seconds                                               ║
+# ╚═══════════════════════════════════════════════════════════════════════════╝
+
+name: 📚 Deploy Learning UI
+
+# ┌─────────────────────────────────────────────────────────────────────────────┐
+# │ TRIGGERS: When does this workflow run?                                      │
+# │                                                                             │
+# │ 💡 EFFICIENT TRIGGERING:                                                    │
+# │ - Only runs when learning-related files change (not on every commit!)       │
+# │ - Paths filter ensures we don't waste CI time on unrelated changes          │
+# │ - Manual dispatch available for testing                                     │
+# └─────────────────────────────────────────────────────────────────────────────┘
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/learn/**'           # Learning UI files
+      - 'index.html'              # Landing page
+      - 'assets/**'               # Shared assets
+      - '.github/workflows/deploy-learning.yml'  # This workflow itself
+  workflow_dispatch:  # Manual trigger from GitHub UI
+
+# ┌─────────────────────────────────────────────────────────────────────────────┐
+# │ PERMISSIONS: What can this workflow do?                                     │
+# │                                                                             │
+# │ 💡 WHY THESE PERMISSIONS:                                                   │
+# │ - contents:read = Can read the repository files                             │
+# │ - pages:write = Can deploy to GitHub Pages                                  │
+# │ - id-token:write = Required for secure GitHub Pages deployment              │
+# └─────────────────────────────────────────────────────────────────────────────┘
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# ┌─────────────────────────────────────────────────────────────────────────────┐
+# │ CONCURRENCY: Coordinate with test workflow                                  │
+# │                                                                             │
+# │ 💡 WHY THIS MATTERS:                                                        │
+# │ - Both this workflow and tests.yml deploy to GitHub Pages                   │
+# │ - They share the "pages" group to prevent simultaneous deploys              │
+# │ - cancel-in-progress: false = Let running deploys finish                    │
+# │                                                                             │
+# │ 🎯 COORDINATION:                                                            │
+# │ If both workflows trigger, they queue up instead of conflicting!            │
+# └─────────────────────────────────────────────────────────────────────────────┘
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # ╔═════════════════════════════════════════════════════════════════════════╗
+  # ║                     BUILD & DEPLOY LEARNING UI                          ║
+  # ║                                                                         ║
+  # ║  This job builds the site structure and deploys to GitHub Pages.        ║
+  # ╚═════════════════════════════════════════════════════════════════════════╝
+  deploy:
+    name: 🚀 Deploy Learning UI
+    runs-on: ubuntu-latest
+    
+    # Connect to GitHub Pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+      # ┌─────────────────────────────────────────────────────────────────────┐
+      # │ STEP 1: Get the code                                                │
+      # └─────────────────────────────────────────────────────────────────────┘
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      # ┌─────────────────────────────────────────────────────────────────────┐
+      # │ STEP 2: Build the site structure                                    │
+      # │                                                                     │
+      # │ 💡 WHAT WE'RE BUILDING:                                             │
+      # │ We create a "_site" directory with:                                 │
+      # │ - Landing page at root (index.html)                                 │
+      # │ - Learning UI in /learn subdirectory                                │
+      # │ - Assets directory for images/logos                                 │
+      # │                                                                     │
+      # │ 📁 STRUCTURE:                                                       │
+      # │ _site/                                                              │
+      # │ ├── index.html          ← Landing page                             │
+      # │ ├── learn/              ← Learning UI                              │
+      # │ │   ├── index.html                                                 │
+      # │ │   ├── learn.css                                                  │
+      # │ │   └── learn.js                                                   │
+      # │ └── assets/             ← Shared assets                            │
+      # │     ├── logo.png                                                   │
+      # │     └── ...                                                        │
+      # └─────────────────────────────────────────────────────────────────────┘
+      - name: Build site structure
+        run: |
+          echo "📦 Building site structure..."
+          
+          # Create the site directory
+          mkdir -p _site
+          
+          # Copy landing page
+          cp index.html _site/
+          echo "✅ Copied landing page"
+          
+          # Copy learning UI
+          cp -r docs/learn _site/
+          echo "✅ Copied learning UI"
+          
+          # Copy assets
+          cp -r assets _site/
+          echo "✅ Copied assets"
+          
+          # Copy guides for relative links from learning UI
+          if [ -d "guides" ]; then
+            cp -r guides _site/
+            echo "✅ Copied guides"
+          fi
+          
+          echo "🎉 Site structure complete!"
+          echo ""
+          echo "📂 Site structure:"
+          ls -la _site
+      
+      # ┌─────────────────────────────────────────────────────────────────────┐
+      # │ STEP 3: Setup GitHub Pages                                          │
+      # │                                                                     │
+      # │ 💡 OFFICIAL ACTION:                                                 │
+      # │ This configures GitHub Pages settings for the deployment.           │
+      # └─────────────────────────────────────────────────────────────────────┘
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      
+      # ┌─────────────────────────────────────────────────────────────────────┐
+      # │ STEP 4: Upload as Pages artifact                                    │
+      # │                                                                     │
+      # │ 💡 ARTIFACT-BASED DEPLOYMENT:                                       │
+      # │ Modern GitHub Pages uses artifacts instead of branch-based deploy.  │
+      # │ This is more reliable and integrates better with Actions.           │
+      # └─────────────────────────────────────────────────────────────────────┘
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      
+      # ┌─────────────────────────────────────────────────────────────────────┐
+      # │ STEP 5: Deploy to GitHub Pages                                      │
+      # │                                                                     │
+      # │ 💡 THE FINAL STEP:                                                  │
+      # │ This actually publishes the site to GitHub Pages.                   │
+      # │ The URL will be available in the deployment output.                 │
+      # └─────────────────────────────────────────────────────────────────────┘
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+      
+      # ┌─────────────────────────────────────────────────────────────────────┐
+      # │ STEP 6: Generate summary                                            │
+      # │                                                                     │
+      # │ Shows a nice summary in the GitHub Actions UI with links.           │
+      # └─────────────────────────────────────────────────────────────────────┘
+      - name: Generate deployment summary
+        run: |
+          echo "## 📚 Learning UI Deployment" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **Successfully deployed to GitHub Pages!**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🔗 Links" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- 🏠 [Landing Page](${{ steps.deployment.outputs.page_url }})" >> $GITHUB_STEP_SUMMARY
+          echo "- 📚 [Learning UI](${{ steps.deployment.outputs.page_url }}learn/)" >> $GITHUB_STEP_SUMMARY
+          echo "- 📊 [Test Reports](${{ steps.deployment.outputs.page_url }}allure/)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📦 Deployed Content" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Landing page (index.html)" >> $GITHUB_STEP_SUMMARY
+          echo "- Learning UI (docs/learn/)" >> $GITHUB_STEP_SUMMARY
+          echo "- Assets (assets/)" >> $GITHUB_STEP_SUMMARY
+          echo "- Guides (guides/)" >> $GITHUB_STEP_SUMMARY

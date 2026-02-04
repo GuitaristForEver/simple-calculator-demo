@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Simple Calculator Learning UI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="learn.css" />
+    <script defer src="learn.js"></script>
+  </head>
+  <body>
+    <div class="orb orb-1" aria-hidden="true"></div>
+    <div class="orb orb-2" aria-hidden="true"></div>
+    <div class="orb orb-3" aria-hidden="true"></div>
+
+    <main class="container">
+      <header class="hero">
+        <div class="hero-badge">Learning UI</div>
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">Simple Calculator</p>
+            <h1>CI/CD Learning Studio</h1>
+            <p class="lede">
+              A compact, hands-on map of the repo. Track your progress, run the
+              quickstart, and move through the learning path in order.
+            </p>
+            <div class="actions">
+              <a class="btn primary" href="https://github.com/GuitaristForEver/simple-calculator-demo/blob/main/guides/01-getting-started.md">Start Here</a>
+              <a class="btn ghost" href="../../allure/" target="_blank">📊 Test Reports</a>
+              <button class="btn ghost" id="toggleFocus" type="button">Focus Mode</button>
+            </div>
+            <div class="stats">
+              <div class="stat">
+                <span class="stat-value">6</span>
+                <span class="stat-label">Guides</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">4</span>
+                <span class="stat-label">Stages</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">~70</span>
+                <span class="stat-label">Minutes</span>
+              </div>
+            </div>
+          </div>
+          <div class="hero-art">
+            <img src="../../assets/logo.png" alt="Calculator Robot" />
+          </div>
+        </div>
+      </header>
+
+      <section class="grid">
+        <article class="card path" style="--delay: 0ms">
+          <div class="card-header">
+            <h2>4-Stage Learning Path</h2>
+            <span class="chip">Progressive</span>
+          </div>
+          <ol class="path-list">
+            <li>
+              <span class="path-step">1</span>
+              <div>
+                <h3>Developer Flow</h3>
+                <p>Run the calculator locally and get comfortable with tests.</p>
+              </div>
+            </li>
+            <li>
+              <span class="path-step">2</span>
+              <div>
+                <h3>Pre-commit Hooks</h3>
+                <p>Automate formatting and checks before every commit.</p>
+              </div>
+            </li>
+            <li>
+              <span class="path-step">3</span>
+              <div>
+                <h3>CI/CD Workflows</h3>
+                <p>Understand how the pipelines run in GitHub Actions.</p>
+              </div>
+            </li>
+            <li>
+              <span class="path-step">4</span>
+              <div>
+                <h3>Advanced Features</h3>
+                <p>Explore reporting, caching, and quality gates.</p>
+              </div>
+            </li>
+          </ol>
+        </article>
+
+        <article class="card guides focus-keep" style="--delay: 80ms">
+          <div class="card-header">
+            <h2>Guide Checklist</h2>
+            <div class="progress-meta" aria-live="polite" data-progress-text>0/6 complete</div>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" data-progress></div>
+          </div>
+          <div class="guide-list">
+            <label class="guide-item">
+              <input type="checkbox" data-guide="01" />
+              <span>01. Getting Started</span>
+              <a href="../../guides/01-getting-started.md">Open</a>
+            </label>
+            <label class="guide-item">
+              <input type="checkbox" data-guide="02" />
+              <span>02. Understanding the Code</span>
+              <a href="../../guides/02-understanding-the-code.md">Open</a>
+            </label>
+            <label class="guide-item">
+              <input type="checkbox" data-guide="03" />
+              <span>03. Running Tests</span>
+              <a href="../../guides/03-running-tests.md">Open</a>
+            </label>
+            <label class="guide-item">
+              <input type="checkbox" data-guide="04" />
+              <span>04. Pre-commit Hooks</span>
+              <a href="../../guides/04-pre-commit-hooks.md">Open</a>
+            </label>
+            <label class="guide-item">
+              <input type="checkbox" data-guide="05" />
+              <span>05. CI/CD Basics</span>
+              <a href="../../guides/05-ci-cd-basics.md">Open</a>
+            </label>
+            <label class="guide-item">
+              <input type="checkbox" data-guide="06" />
+              <span>06. Advanced Features</span>
+              <a href="../../guides/06-advanced-features.md">Open</a>
+            </label>
+          </div>
+          <button class="btn subtle" type="button" data-reset>Reset Progress</button>
+        </article>
+
+        <article class="card quickstart focus-keep" style="--delay: 160ms">
+          <div class="card-header">
+            <h2>Quick Start</h2>
+            <span class="chip">Terminal</span>
+          </div>
+          <pre class="code" data-copy-target><code># Install dependencies
+pip install -r requirements.txt
+
+# Run the calculator
+python -m calculator.calculator
+
+# Run tests
+pytest</code></pre>
+          <div class="card-actions">
+            <button class="btn primary" type="button" data-copy>Copy Commands</button>
+            <span class="copy-status" data-copy-status aria-live="polite"></span>
+          </div>
+        </article>
+
+        <article class="card slideshow focus-keep" style="--delay: 200ms">
+          <div class="card-header">
+            <h2>Developer Flow</h2>
+            <span class="chip">Slide Show</span>
+          </div>
+          <div class="slides" data-slides>
+            <button class="slide-nav" type="button" data-prev aria-label="Previous step">
+              Prev
+            </button>
+            <button class="slide-nav" type="button" data-next aria-label="Next step">
+              Next
+            </button>
+            <div class="slide-track" data-track>
+              <article class="slide" data-slide>
+                <div class="slide-media">
+                  <img src="../../assets/flow-pre-commit.svg" alt="Pre-commit hooks" />
+                </div>
+                <div class="slide-content">
+                  <p class="slide-step">Step 1</p>
+                  <h3>Pre-commit Hooks</h3>
+                  <p>Catch issues before code leaves your laptop.</p>
+                  <div class="slide-meta">
+                    <span>Local guardrails</span>
+                    <span>Fast feedback</span>
+                  </div>
+                </div>
+              </article>
+              <article class="slide" data-slide>
+                <div class="slide-media">
+                  <img src="../../assets/flow-lint.svg" alt="Lint checks" />
+                </div>
+                <div class="slide-content">
+                  <p class="slide-step">Step 2</p>
+                  <h3>Lint</h3>
+                  <p>Keep style and quality consistent across the team.</p>
+                  <div class="slide-meta">
+                    <span>Static analysis</span>
+                    <span>Code health</span>
+                  </div>
+                </div>
+              </article>
+              <article class="slide" data-slide>
+                <div class="slide-media">
+                  <img src="../../assets/flow-security.svg" alt="Security tests" />
+                </div>
+                <div class="slide-content">
+                  <p class="slide-step">Step 3</p>
+                  <h3>Security Tests</h3>
+                  <p>Scan for known issues before anything ships.</p>
+                  <div class="slide-meta">
+                    <span>Dependency scan</span>
+                    <span>Policy checks</span>
+                  </div>
+                </div>
+              </article>
+              <article class="slide" data-slide>
+                <div class="slide-media">
+                  <img src="../../assets/flow-unit-tests.svg" alt="Unit tests" />
+                </div>
+                <div class="slide-content">
+                  <p class="slide-step">Step 4</p>
+                  <h3>Unit Tests</h3>
+                  <p>Validate the core calculator behavior quickly.</p>
+                  <div class="slide-meta">
+                    <span>Fast checks</span>
+                    <span>High signal</span>
+                  </div>
+                </div>
+              </article>
+              <article class="slide" data-slide>
+                <div class="slide-media">
+                  <img src="../../assets/flow-build-image.svg" alt="Build container image" />
+                </div>
+                <div class="slide-content">
+                  <p class="slide-step">Step 5</p>
+                  <h3>Build Image</h3>
+                  <p>Package the app so it runs the same everywhere.</p>
+                  <div class="slide-meta">
+                    <span>Artifacts</span>
+                    <span>Reproducible</span>
+                  </div>
+                </div>
+              </article>
+              <article class="slide" data-slide>
+                <div class="slide-media">
+                  <img src="../../assets/flow-deploy-pr.svg" alt="Deploy preview" />
+                </div>
+                <div class="slide-content">
+                  <p class="slide-step">Step 6</p>
+                  <h3>Deploy to PR</h3>
+                  <p>Spin up a preview environment for reviewers.</p>
+                  <div class="slide-meta">
+                    <span>Preview URL</span>
+                    <span>Collaborate</span>
+                  </div>
+                </div>
+              </article>
+              <article class="slide" data-slide>
+                <div class="slide-media">
+                  <img src="../../assets/flow-integration.svg" alt="Integration tests" />
+                </div>
+                <div class="slide-content">
+                  <p class="slide-step">Step 7</p>
+                  <h3>Integration Tests</h3>
+                  <p>Verify the full pipeline with real dependencies.</p>
+                  <div class="slide-meta">
+                    <span>End-to-end</span>
+                    <span>Confidence</span>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+          <div class="slide-footer">
+            <div class="slide-dots" data-dots></div>
+            <div class="slide-counter" data-counter>1 / 7</div>
+          </div>
+        </article>
+
+        <article class="card map" style="--delay: 240ms">
+          <div class="card-header">
+            <h2>Repo Map</h2>
+            <span class="chip">Where to Look</span>
+          </div>
+          <ul class="map-list">
+            <li>
+              <span class="map-path">guides/</span>
+              <span class="map-note">Step-by-step learning path.</span>
+            </li>
+            <li>
+              <span class="map-path">calculator/</span>
+              <span class="map-note">Core Python calculator logic.</span>
+            </li>
+            <li>
+              <span class="map-path">tests/</span>
+              <span class="map-note">Pytest suite and examples.</span>
+            </li>
+            <li>
+              <span class="map-path">docs/</span>
+              <span class="map-note">Deep dives and architecture.</span>
+            </li>
+          </ul>
+        </article>
+
+        <article class="card qr-card" style="--delay: 280ms">
+          <div class="card-header">
+            <h2>Scan the Repo</h2>
+            <span class="chip">QR</span>
+          </div>
+          <div class="qr-body">
+            <img src="../../assets/repo-qr.png" alt="QR code for the repository" />
+            <div>
+              <p class="qr-title">Open on your phone</p>
+              <p class="qr-note">Point your camera to jump straight to the GitHub repo.</p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <footer class="footer">
+        <p>
+          Tip: Move through the guides in order, then revisit the docs for deeper
+          dives.
+        </p>
+      </footer>
+    </main>
+  </body>
+</html>
