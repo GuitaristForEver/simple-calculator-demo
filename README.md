@@ -325,6 +325,10 @@ See [`docs/reference/STRUCTURE.md`](docs/reference/STRUCTURE.md) for details.
 ### For Your Projects
 - 🧩 **[Prompts](prompts/)** - Copy-paste CI/CD setup for your repos
 
+### More Ways to Interact with This Repo Knowledge
+- 🤖 **[Copilot Spaces](https://github.com/copilot/spaces)** - Interactive AI-powered exploration of this repository (requires Copilot licensing)
+- 💬 **[GitMCP Chat](https://gitmcp.io/GuitaristForEver/simple-calculator-demo/chat)** - Chat with this repository using GitMCP
+
 ---
 
 ## Awesome GitHub Tools
