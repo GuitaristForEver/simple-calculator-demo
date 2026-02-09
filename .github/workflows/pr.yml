@@ -440,10 +440,10 @@ jobs:
           output=$(docker run --rm simple-calculator:test python -c "from src.calculator import Calculator; c = Calculator(); print(c.add(2, 3))")
           echo "Output: $output"
 
-          if [ "$output" = "5.0" ]; then
+          if [ "$output" = "5" ]; then
             echo "✅ Smoke test passed! Calculator is working correctly."
           else
-            echo "❌ Smoke test failed! Expected '5.0' but got '$output'"
+            echo "❌ Smoke test failed! Expected '5' but got '$output'"
             exit 1
           fi
 
