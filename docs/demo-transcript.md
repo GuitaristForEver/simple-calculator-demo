@@ -58,7 +58,64 @@ pytest --alluredir=allure-results -v
 
 ---
 
-## Part 3: Code Quality with Ruff
+## Part 3: Code Coverage & Codecov
+
+> "Code coverage measures how much of your code is actually tested. We enforce an 80% minimum threshold."
+
+```bash
+# Run tests with coverage report
+pytest --cov=src --cov-report=term-missing --cov-fail-under=80
+
+# Generate XML for Codecov
+pytest --cov=src --cov-report=xml
+```
+
+> "The `--cov-fail-under=80` flag fails the build if coverage drops below 80%. This is your quality gate."
+
+**Sample output:**
+```
+---------- coverage: platform linux, python 3.9 ----------
+Name                  Stmts   Miss  Cover   Missing
+---------------------------------------------------
+src/calculator.py        25      3    88%   45-47
+---------------------------------------------------
+TOTAL                    25      3    88%
+
+Required coverage: 80%. Achieved: 88%. PASSED!
+```
+
+> "Notice we exclude the CLI code (interactive mode) from coverage. That's intentional — testing user input is complex and low value for a demo."
+
+### Codecov Integration
+
+> "Coverage reports are uploaded to Codecov for tracking trends over time."
+
+```yaml
+- name: Upload coverage to Codecov
+  uses: codecov/codecov-action@v4
+  with:
+    files: ./coverage.xml
+    token: ${{ secrets.CODECOV_TOKEN }}
+```
+
+> "Codecov provides a dashboard showing coverage changes per PR, historical trends, and which files need more tests."
+
+**Badge in README:**
+```markdown
+[![codecov](https://codecov.io/gh/GuitaristForEver/simple-calculator-demo/graph/badge.svg)](https://codecov.io/gh/GuitaristForEver/simple-calculator-demo)
+```
+
+> "The badge shows current coverage at a glance. Green means healthy, red means attention needed."
+
+### Why 80%?
+
+> "100% coverage doesn't mean bug-free code. You can have 100% coverage with terrible tests. Coverage just means 'this line ran' — not 'this line is correct.'"
+
+> "80% is a pragmatic threshold: high enough to catch regressions, low enough to avoid testing boilerplate. Teams typically choose 70-90%."
+
+---
+
+## Part 4: Code Quality with Ruff
 
 > "Before code reaches the repo, it passes through Ruff — a fast Python linter."
 
@@ -71,7 +128,7 @@ ruff format --check .
 
 ---
 
-## Part 4: Security Scanning
+## Part 5: Security Scanning
 
 > "Security is built into the pipeline, not bolted on."
 
@@ -84,7 +141,7 @@ safety check             # Dependency vulnerability scan
 
 ---
 
-## Part 5: Pre-commit Hooks
+## Part 6: Pre-commit Hooks
 
 > "Quality gates start locally, before code is even committed."
 
@@ -98,7 +155,7 @@ pre-commit run --all-files
 
 ---
 
-## Part 6: The CI/CD Pipeline
+## Part 7: The CI/CD Pipeline
 
 > "Now the main event — the GitHub Actions workflow."
 
@@ -156,7 +213,7 @@ pre-commit run --all-files
 
 ---
 
-## Part 7: Docker Support
+## Part 8: Docker Support
 
 > "The project includes a Dockerfile for containerized deployment."
 
@@ -174,7 +231,7 @@ docker run --rm simple-calculator python -c "from src.calculator import Calculat
 
 ---
 
-## Part 8: Caching for Speed
+## Part 9: Caching for Speed
 
 > "CI runs complete in ~2-3 minutes thanks to aggressive caching."
 
@@ -189,7 +246,7 @@ docker run --rm simple-calculator python -c "from src.calculator import Calculat
 
 ---
 
-## Part 9: GitHub Pages Deployment
+## Part 10: GitHub Pages Deployment
 
 > "Test reports are publicly accessible at your GitHub Pages URL."
 
@@ -201,7 +258,7 @@ https://guitaristforever.github.io/simple-calculator-demo/
 
 ---
 
-## Part 10: Learning Guides
+## Part 11: Learning Guides
 
 > "The repository includes step-by-step learning guides in the guides/ folder."
 
@@ -224,13 +281,14 @@ https://guitaristforever.github.io/simple-calculator-demo/
 
 **What you learned:**
 1. Local development with pre-commit hooks
-2. Automated testing with pytest and coverage gates (80% minimum)
-3. Enterprise reporting with Allure
-4. Parallel and sequential job orchestration
-5. Security scanning with Bandit, Safety, and Gitleaks
-6. Docker containerization with smoke testing
-7. Caching strategies for faster builds
-8. Automated deployment to GitHub Pages
+2. Automated testing with pytest
+3. Code coverage enforcement (80% minimum) with Codecov integration
+4. Enterprise reporting with Allure
+5. Parallel and sequential job orchestration
+6. Security scanning with Bandit, Safety, and Gitleaks
+7. Docker containerization with smoke testing
+8. Caching strategies for faster builds
+9. Automated deployment to GitHub Pages
 
 > "Fork this repo, experiment with the workflows, and apply these patterns to your own projects. Happy building!"
 
