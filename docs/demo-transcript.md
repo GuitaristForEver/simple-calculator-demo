@@ -258,7 +258,139 @@ https://guitaristforever.github.io/simple-calculator-demo/
 
 ---
 
-## Part 11: Learning Guides
+## Part 11: GitHub Secrets Protection
+
+> "Secrets like API tokens and credentials must never be committed to code. GitHub provides secure secret management."
+
+### Repository Secrets
+
+> "Secrets are stored encrypted and only exposed to workflows at runtime."
+
+**Settings → Secrets and variables → Actions:**
+```
+CODECOV_TOKEN          → Coverage reporting
+CLAUDE_CODE_OAUTH_TOKEN → AI code review
+```
+
+> "Secrets are masked in logs — if a workflow accidentally prints a secret, GitHub replaces it with `***`."
+
+### Secret Scanning
+
+> "GitHub automatically scans commits for accidentally exposed secrets."
+
+```
+┌─────────────────────────────────────────────────────┐
+│  🔍 Secret Scanning                                 │
+│                                                     │
+│  Detects: API keys, tokens, passwords, private     │
+│  keys from 100+ service providers                  │
+│                                                     │
+│  ✅ Enabled by default on public repos             │
+│  ⚠️  Alerts repo admins when secrets are found     │
+└─────────────────────────────────────────────────────┘
+```
+
+> "Combined with Gitleaks in pre-commit hooks, you have two layers of protection — local and remote."
+
+### Push Protection
+
+> "Push protection blocks commits containing secrets before they reach the repo."
+
+```
+$ git push origin feature-branch
+remote: error: GH013: Repository rule violations found
+remote:
+remote: - Push cannot contain secrets
+remote:   - Secret type: GitHub Personal Access Token
+remote:   - Location: config.py:15
+```
+
+> "This is your last line of defense. Even if pre-commit hooks are bypassed, GitHub catches it."
+
+---
+
+## Part 12: Branch Protection & Rulesets
+
+> "The main branch is sacred. No one — not even admins — should push directly to it."
+
+### Branch Protection Rules
+
+> "Branch protection enforces code review and passing checks before merge."
+
+**Settings → Branches → Add rule for `main`:**
+
+| Rule | Purpose |
+|------|---------|
+| Require pull request | No direct pushes to main |
+| Require approvals (1+) | At least one reviewer must approve |
+| Require status checks | CI must pass before merge |
+| Require conversation resolution | All review comments must be resolved |
+| Require signed commits | Verify commit author identity |
+| Include administrators | Even admins follow the rules |
+
+```
+┌─────────────────────────────────────────────────────┐
+│  🛡️ Main Branch Protection                         │
+│                                                     │
+│  Direct push to main?     ❌ Blocked               │
+│  PR without review?       ❌ Blocked               │
+│  PR with failing tests?   ❌ Blocked               │
+│  PR with all checks?      ✅ Allowed               │
+└─────────────────────────────────────────────────────┘
+```
+
+### Required Status Checks
+
+> "Specify which CI jobs must pass before a PR can be merged."
+
+**Required checks for this repo:**
+```
+✅ 🔍 Lint
+✅ 🔒 Security
+✅ 🧪 Unit Tests
+```
+
+> "If any of these fail, the merge button stays disabled. No exceptions."
+
+### Repository Rulesets (Modern Approach)
+
+> "Rulesets are the newer, more flexible replacement for branch protection rules."
+
+**Settings → Rules → Rulesets → New ruleset:**
+
+```yaml
+name: Protect Main Branch
+target: branch
+enforcement: active
+conditions:
+  ref_name:
+    include: ["refs/heads/main"]
+rules:
+  - type: pull_request
+    parameters:
+      required_approving_review_count: 1
+      require_last_push_approval: true
+  - type: required_status_checks
+    parameters:
+      required_checks:
+        - context: "🔍 Lint"
+        - context: "🔒 Security"
+        - context: "🧪 Unit Tests"
+  - type: non_fast_forward
+    # Prevent force pushes
+```
+
+> "Rulesets can apply to multiple branches, support bypass lists for emergencies, and are easier to manage at scale."
+
+### Why This Matters
+
+> "Without branch protection, one bad commit can break production. With it, every change goes through the same quality gates — lint, security, tests, review."
+
+> "This isn't bureaucracy. It's professionalism. The 5 minutes spent on review saves hours of debugging in production."
+
+---
+
+## Part 13: Learning Guides
 
 > "The repository includes step-by-step learning guides in the guides/ folder."
 
@@ -289,6 +421,8 @@ https://guitaristforever.github.io/simple-calculator-demo/
 7. Docker containerization with smoke testing
 8. Caching strategies for faster builds
 9. Automated deployment to GitHub Pages
+10. GitHub secrets protection and push protection
+11. Branch protection rules and rulesets to defend main
 
 > "Fork this repo, experiment with the workflows, and apply these patterns to your own projects. Happy building!"
 
