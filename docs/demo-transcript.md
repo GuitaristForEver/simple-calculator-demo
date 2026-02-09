@@ -2,7 +2,7 @@
 
 ## Introduction
 
-> "Welcome! This repository demonstrates how to build a production-grade CI/CD pipeline using a simple Python calculator as the example project. The calculator is intentionally basic — the real value is in the infrastructure around it."
+> "Welcome! This repository demonstrates how to build a production-grade CI/CD pipeline using a simple Python calculator. The calculator is intentionally basic — the real value is in the infrastructure around it."
 
 ---
 
@@ -11,12 +11,16 @@
 > "Let's start with the calculator itself."
 
 ```bash
-python -m calculator.calculator
+# Traditional approach
+python -m src.calculator
+
+# Or with uv (modern & fast)
+uv run python -m src.calculator
 ```
 
-> "It's a simple command-line calculator supporting addition, subtraction, multiplication, and division. Clean code with type hints and proper error handling for division by zero."
+> "It's a command-line calculator supporting five operations: addition, subtraction, multiplication, division, and power. Clean code with type hints and proper error handling."
 
-**Key file:** `calculator/calculator.py`
+**Key file:** `src/calculator.py`
 
 ```python
 class Calculator:
@@ -27,6 +31,9 @@ class Calculator:
         if b == 0:
             raise ValueError("Cannot divide by zero")
         return a / b
+
+    def power(self, a: float, b: float) -> float:
+        return a ** b
 ```
 
 > "Simple, readable, and testable. That's the point."
@@ -35,17 +42,19 @@ class Calculator:
 
 ## Part 2: Testing with Pytest & Allure
 
-> "Every function has corresponding tests."
+> "Every function has corresponding tests with an 80% coverage requirement."
 
 ```bash
-pytest tests/ -v
+# Run tests with coverage
+pytest --cov=src --cov-report=term --cov-fail-under=80
+
+# Generate Allure results
+pytest --alluredir=allure-results -v
 ```
 
-> "We use pytest with Allure for enterprise-grade test reporting. Tests are organized with clear descriptions and cover edge cases like division by zero."
+> "We use pytest with Allure for enterprise-grade test reporting. Tests cover all operations including edge cases like division by zero."
 
 **Key file:** `tests/test_calculator.py`
-
-> "After tests run, Allure generates beautiful HTML reports showing pass/fail status, execution time, and historical trends."
 
 ---
 
@@ -67,11 +76,11 @@ ruff format --check .
 > "Security is built into the pipeline, not bolted on."
 
 ```bash
-bandit -r calculator/    # Static security analysis
+bandit -r src/           # Static security analysis
 safety check             # Dependency vulnerability scan
 ```
 
-> "Bandit scans for common security issues in Python code. Safety checks dependencies against known vulnerabilities. Both run automatically on every push."
+> "Bandit scans for common security issues in Python code. Safety checks dependencies against known vulnerabilities. Gitleaks detects secrets via pre-commit."
 
 ---
 
@@ -93,81 +102,135 @@ pre-commit run --all-files
 
 > "Now the main event — the GitHub Actions workflow."
 
-**Key file:** `.github/workflows/tests.yml`
+**Key file:** `.github/workflows/pr.yml`
 
-> "Our pipeline has 5 jobs organized in stages:"
+> "Our pipeline has 8 jobs organized in stages:"
 
 ### Stage 1 — Parallel Quality Gates
 ```
-┌─────────────┐    ┌─────────────┐
-│    Lint     │    │  Security   │
-│   (Ruff)    │    │  (Bandit)   │
-└─────────────┘    └─────────────┘
+┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+│  🔍 Lint    │    │ 🔒 Security │    │  🧪 Test    │
+│   (Ruff)    │    │  (Bandit)   │    │  (pytest)   │
+└─────────────┘    └─────────────┘    └─────────────┘
+        │                 │                  │
+        └─────────────────┼──────────────────┘
+                          ▼
 ```
 
-> "Lint and Security run in parallel. If either fails, the pipeline stops."
+> "Lint, Security, and Test run in parallel — no dependencies between them. This saves ~60 seconds compared to sequential execution."
 
-### Stage 2 — Sequential Testing & Reporting
+### Stage 2 — Docker Build & Verification
 ```
-       ┌─────────────┐
-       │    Test     │
-       │  (pytest)   │
-       └──────┬──────┘
-              │
-       ┌──────▼──────┐
-       │   Report    │
-       │  (Allure)   │
-       └──────┬──────┘
-              │
-       ┌──────▼──────┐
-       │   Deploy    │
-       │ (GH Pages)  │
-       └─────────────┘
+                  ┌───────────────┐
+                  │ 🔎 Check      │
+                  │   Changes     │
+                  └───────┬───────┘
+                          │
+                  ┌───────▼───────┐
+                  │ 🐳 Docker     │  (skipped if no changes)
+                  │    Build      │
+                  └───────┬───────┘
+                          │
+                  ┌───────▼───────┐
+                  │ 💨 Smoke      │
+                  │    Test       │
+                  └───────────────┘
 ```
 
-> "Tests require 80% code coverage. Reports are generated with Allure. On the main branch, reports deploy to GitHub Pages automatically."
+> "After quality gates pass, we check if Docker-related files changed. If so, build the image and run a smoke test to verify the calculator works inside the container."
+
+### Stage 3 — Reporting & Deployment
+```
+                  ┌───────────────┐
+                  │ 📊 Report     │
+                  │  (Allure)     │
+                  └───────┬───────┘
+                          │
+                  ┌───────▼───────┐
+                  │ 🌐 Deploy     │  (main branch only)
+                  │ (GH Pages)    │
+                  └───────────────┘
+```
+
+> "Reports are generated with Allure even if tests fail. On the main branch, reports deploy to GitHub Pages automatically."
 
 ---
 
-## Part 7: Caching for Speed
+## Part 7: Docker Support
 
-> "CI runs complete in ~15 seconds thanks to aggressive caching."
+> "The project includes a Dockerfile for containerized deployment."
+
+```bash
+# Build the image
+docker build -t simple-calculator .
+
+# Run the calculator
+docker run --rm simple-calculator python -c "from src.calculator import Calculator; c = Calculator(); print(c.add(2, 3))"
+```
+
+**Key file:** `Dockerfile`
+
+> "The CI pipeline automatically builds and smoke-tests the Docker image when Dockerfile, src/**, or requirements.txt change."
+
+---
+
+## Part 8: Caching for Speed
+
+> "CI runs complete in ~2-3 minutes thanks to aggressive caching."
 
 ```yaml
 - uses: actions/cache@v4
   with:
     path: ~/.cache/pip
-    key: ${{ runner.os }}-pip-${{ hashFiles('requirements*.txt') }}
+    key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
 ```
 
-> "Dependencies, Allure history, and tool caches are preserved between runs. First run: ~45 seconds. Cached runs: ~15 seconds."
+> "Dependencies, Allure history, and Docker layers are cached. First run: ~3 minutes. Cached runs: much faster."
 
 ---
 
-## Part 8: GitHub Pages Deployment
+## Part 9: GitHub Pages Deployment
 
 > "Test reports are publicly accessible at your GitHub Pages URL."
 
 ```
-https://<username>.github.io/simple-calculator-demo/
+https://guitaristforever.github.io/simple-calculator-demo/
 ```
 
 > "Every merge to main updates the reports. Teams can review test trends, find flaky tests, and track quality over time."
 
 ---
 
+## Part 10: Learning Guides
+
+> "The repository includes step-by-step learning guides in the guides/ folder."
+
+| Stage | Guide | Time |
+|-------|-------|------|
+| 1 | Getting Started | 5 min |
+| 2 | Understanding the Code | 10 min |
+| 3 | Running Tests | 10 min |
+| 4 | Pre-commit Hooks | 10 min |
+| 5 | CI/CD Basics | 15 min |
+| 6 | Advanced Features | 20 min |
+
+> "Total learning time: ~70 minutes to understand professional CI/CD practices."
+
+---
+
 ## Conclusion
 
-> "That's the Simple Calculator Demo. A 50-line calculator wrapped in production-grade CI/CD infrastructure."
+> "That's the Simple Calculator Demo. A small Python calculator wrapped in production-grade CI/CD infrastructure."
 
 **What you learned:**
 1. Local development with pre-commit hooks
-2. Automated testing with pytest and coverage gates
+2. Automated testing with pytest and coverage gates (80% minimum)
 3. Enterprise reporting with Allure
 4. Parallel and sequential job orchestration
-5. Security scanning with Bandit and Safety
-6. Caching strategies for faster builds
-7. Automated deployment to GitHub Pages
+5. Security scanning with Bandit, Safety, and Gitleaks
+6. Docker containerization with smoke testing
+7. Caching strategies for faster builds
+8. Automated deployment to GitHub Pages
 
 > "Fork this repo, experiment with the workflows, and apply these patterns to your own projects. Happy building!"
 
@@ -177,11 +240,59 @@ https://<username>.github.io/simple-calculator-demo/
 
 | Task | Command |
 |------|---------|
-| Run calculator | `python -m calculator.calculator` |
-| Run tests | `pytest tests/ -v` |
-| Run with coverage | `pytest --cov=calculator --cov-report=term-missing` |
+| Run calculator | `python -m src.calculator` |
+| Run calculator (uv) | `uv run python -m src.calculator` |
+| Run tests | `pytest -v` |
+| Run with coverage | `pytest --cov=src --cov-report=term-missing --cov-fail-under=80` |
 | Lint code | `ruff check .` |
 | Format code | `ruff format .` |
-| Security scan | `bandit -r calculator/` |
+| Security scan | `bandit -r src/` |
 | Pre-commit | `pre-commit run --all-files` |
-| Generate Allure report | `pytest --alluredir=reports/allure-results && allure serve reports/allure-results` |
+| Build Docker | `docker build -t simple-calculator .` |
+| Generate Allure report | `pytest --alluredir=allure-results && allure serve allure-results` |
+
+---
+
+## Full Pipeline Diagram
+
+```
+                    PR / Push to main
+                           │
+           ┌───────────────┼───────────────┐
+           │               │               │
+           ▼               ▼               ▼
+      ┌─────────┐    ┌──────────┐    ┌─────────┐
+      │ 🔍 Lint │    │🔒Security│    │ 🧪 Test │   Stage 1 (parallel)
+      └────┬────┘    └────┬─────┘    └────┬────┘
+           │              │               │
+           └──────────────┼───────────────┘
+                          ▼
+                   ┌─────────────┐
+                   │ 🔎 Check    │
+                   │  Changes    │                  Stage 2
+                   └──────┬──────┘
+                          │
+            (if Docker files changed)
+                          │
+                   ┌──────▼──────┐
+                   │ 🐳 Docker   │
+                   │   Build     │
+                   └──────┬──────┘
+                          │
+                   ┌──────▼──────┐
+                   │ 💨 Smoke    │
+                   │   Test      │
+                   └──────┬──────┘
+                          │
+                   ┌──────▼──────┐
+                   │ 📊 Report   │                  Stage 3
+                   │  (Allure)   │
+                   └──────┬──────┘
+                          │
+               (if main branch)
+                          │
+                   ┌──────▼──────┐
+                   │ 🌐 Deploy   │
+                   │ (GH Pages)  │
+                   └─────────────┘
+```
