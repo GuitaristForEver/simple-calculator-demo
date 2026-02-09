@@ -74,11 +74,11 @@ jobs:
   # ║  These jobs have NO "needs:" so they start SIMULTANEOUSLY!              ║
   # ║                                                                         ║
   # ║  ┌─────────┐    ┌──────────┐    ┌────────┐                             ║
-  # ║  │ 🔍 Lint │    │🔒Security│    │🐳Docker│  ← All start at same time   ║
+  # ║  │ 🔍 Lint │    │🔒Security│    │🧪 Test │  ← All start at same time   ║
   # ║  └─────────┘    └──────────┘    └────────┘                             ║
   # ║                                                                         ║
   # ║  💡 WHY PARALLEL?                                                       ║
-  # ║  - Lint, Security, and Docker don't depend on each other                ║
+  # ║  - Lint, Security, and Test don't depend on each other                  ║
   # ║  - Running together saves ~60 seconds vs sequential                     ║
   # ║  - Each gets its own fresh virtual machine (runner)                     ║
   # ╚═════════════════════════════════════════════════════════════════════════╝
@@ -202,118 +202,11 @@ jobs:
           echo "| Gitleaks | Secrets detection | ✅ (via pre-commit) |" >> $GITHUB_STEP_SUMMARY
 
   # ┌─────────────────────────────────────────────────────────────────────────┐
-  # │ JOB 3: DOCKER - Build and Test Docker Image                             │
+  # │ JOB 3: TEST - Run Tests with Coverage                                   │
   # │                                                                         │
-  # │ 💡 WHY DOCKER?                                                          │
-  # │ - Ensures app runs in containerized environments                        │
-  # │ - Validates Dockerfile is correct                                       │
-  # │ - Runs in parallel with lint and security (Stage 1)                     │
-  # │                                                                         │
-  # │ 🎯 CHANGE DETECTION:                                                    │
-  # │ - Only builds if Dockerfile, src/, or requirements.txt changed          │
-  # │ - Skips build if only docs/tests/workflows changed (saves time!)        │
-  # │                                                                         │
-  # │ 💾 CACHING:                                                             │
-  # │ - Uses GitHub Actions cache for Docker layers                           │
-  # │ - First build: ~60 seconds. Cached: ~15 seconds. 4x faster!             │
-  # └─────────────────────────────────────────────────────────────────────────┘
-  docker:
-    name: 🐳 Docker
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      # Check if Docker-related files changed
-      - name: Check for changes
-        uses: dorny/paths-filter@v3
-        id: changes
-        with:
-          filters: |
-            docker:
-              - 'Dockerfile'
-              - 'src/**'
-              - 'requirements.txt'
-
-      # Set up Docker Buildx for advanced features and caching
-      - name: Set up Docker Buildx
-        if: steps.changes.outputs.docker == 'true'
-        uses: docker/setup-buildx-action@v3
-
-      # Build the Docker image with GitHub Actions cache
-      - name: Build Docker image
-        if: steps.changes.outputs.docker == 'true'
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: false
-          load: true
-          tags: simple-calculator:test
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      # Smoke test: Verify the calculator works inside the container
-      - name: Smoke test - Run calculator
-        if: steps.changes.outputs.docker == 'true'
-        run: |
-          echo "🧪 Running smoke test..."
-          output=$(docker run --rm simple-calculator:test python -c "from src.calculator import Calculator; c = Calculator(); print(c.add(2, 3))")
-          echo "Output: $output"
-
-          if [ "$output" = "5.0" ]; then
-            echo "✅ Smoke test passed! Calculator is working correctly."
-          else
-            echo "❌ Smoke test failed! Expected '5.0' but got '$output'"
-            exit 1
-          fi
-
-      # Generate summary
-      - name: Generate summary
-        if: always()
-        run: |
-          echo "## 🐳 Docker Build" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          if [ "${{ steps.changes.outputs.docker }}" != "true" ]; then
-            echo "⏭️ **Skipped** - No Docker-related files changed" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "Watched paths:" >> $GITHUB_STEP_SUMMARY
-            echo "- \`Dockerfile\`" >> $GITHUB_STEP_SUMMARY
-            echo "- \`src/**\`" >> $GITHUB_STEP_SUMMARY
-            echo "- \`requirements.txt\`" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "✅ **Docker image built and tested successfully!**" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "| Step | Status |" >> $GITHUB_STEP_SUMMARY
-            echo "|------|--------|" >> $GITHUB_STEP_SUMMARY
-            echo "| Build | ✅ |" >> $GITHUB_STEP_SUMMARY
-            echo "| Smoke Test | ✅ |" >> $GITHUB_STEP_SUMMARY
-          fi
-
-  # ╔═════════════════════════════════════════════════════════════════════════╗
-  # ║                       STAGE 2: SEQUENTIAL JOBS                          ║
-  # ║                                                                         ║
-  # ║  These jobs use "needs:" so they wait for previous jobs!                ║
-  # ║                                                                         ║
-  # ║       [lint] ──┐                                                        ║
-  # ║                ├──→ [test] ──→ [report] ──→ [deploy]                    ║
-  # ║   [security] ──┤                                                        ║
-  # ║                │                                                        ║
-  # ║     [docker] ──┘                                                        ║
-  # ║                                                                         ║
-  # ║  💡 WHY SEQUENTIAL?                                                     ║
-  # ║  - No point running tests if linting/security/docker fails              ║
-  # ║  - No point generating reports if tests fail                            ║
-  # ║  - Saves compute time (and money on private repos!)                     ║
-  # ╚═════════════════════════════════════════════════════════════════════════╝
-
-  # ┌─────────────────────────────────────────────────────────────────────────┐
-  # │ JOB 4: TEST - Run Tests with Coverage                                   │
-  # │                                                                         │
-  # │ 💡 WHY "needs: [lint, security, docker]"?                               │
-  # │ - This job WAITS for lint, security, and docker to finish               │
-  # │ - If any fail, this job is skipped (why run tests on bad code?)         │
+  # │ 💡 WHY NO "needs:"?                                                     │
+  # │ - Tests run in parallel with lint and security (Stage 1)                │
+  # │ - Faster feedback: all quality checks run simultaneously                │
   # │                                                                         │
   # │ 📊 COVERAGE EXPLAINED:                                                  │
   # │ - --cov=src = Measure which lines of code are tested                     │
@@ -325,8 +218,7 @@ jobs:
   # │ "this line ran" not "this line is correct."                             │
   # └─────────────────────────────────────────────────────────────────────────┘
   test:
-    name: 🧪 Test
-    needs: [lint, security, docker]  # ← WAIT for all three jobs before starting
+    name: 🧪 Unit Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -404,8 +296,168 @@ jobs:
             echo "❌ **Tests failed or coverage below 80%**" >> $GITHUB_STEP_SUMMARY
           fi
 
+  # ╔═════════════════════════════════════════════════════════════════════════╗
+  # ║                     STAGE 2: DOCKER (SEQUENTIAL)                        ║
+  # ║                                                                         ║
+  # ║  These jobs run AFTER all Stage 1 jobs pass!                            ║
+  # ║                                                                         ║
+  # ║       [lint] ──┐                                                        ║
+  # ║                ├──→ [check-changes] ──→ [docker-build] ──→ [smoke-test] ║
+  # ║   [security] ──┤                                                        ║
+  # ║                │                                                        ║
+  # ║       [test] ──┘                                                        ║
+  # ║                                                                         ║
+  # ║  💡 WHY SEQUENTIAL?                                                     ║
+  # ║  - No point building Docker if lint/security/tests fail                 ║
+  # ║  - Check changes first to skip unnecessary builds (saves time!)         ║
+  # ║  - Smoke test only runs if Docker image was actually built              ║
+  # ╚═════════════════════════════════════════════════════════════════════════╝
+
   # ┌─────────────────────────────────────────────────────────────────────────┐
-  # │ JOB 5: REPORT - Generate Beautiful Test Reports                         │
+  # │ JOB 4: CHECK CHANGES - Detect if Docker-related files changed           │
+  # │                                                                         │
+  # │ 💡 WHY A SEPARATE JOB?                                                  │
+  # │ - Runs only after all quality gates pass                                │
+  # │ - Outputs a flag so downstream jobs can skip if nothing changed         │
+  # │ - Watches: Dockerfile, src/**, requirements.txt                         │
+  # └─────────────────────────────────────────────────────────────────────────┘
+  check-changes:
+    name: 🔎 Check Changes
+    needs: [lint, security, test]
+    runs-on: ubuntu-latest
+
+    # Expose the output so docker-build and smoke-test can read it
+    outputs:
+      docker_changed: ${{ steps.changes.outputs.docker }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for Docker-related changes
+        uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            docker:
+              - 'Dockerfile'
+              - 'src/**'
+              - 'requirements.txt'
+
+      - name: Generate summary
+        run: |
+          echo "## 🔎 Change Detection" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.changes.outputs.docker }}" == "true" ]; then
+            echo "✅ Docker-related files changed — will build image" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⏭️ No Docker-related files changed — skipping build" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Watched paths: \`Dockerfile\`, \`src/**\`, \`requirements.txt\`" >> $GITHUB_STEP_SUMMARY
+
+  # ┌─────────────────────────────────────────────────────────────────────────┐
+  # │ JOB 5: DOCKER BUILD - Build the Docker Image                            │
+  # │                                                                         │
+  # │ 💡 WHY?                                                                 │
+  # │ - Validates the Dockerfile builds successfully                          │
+  # │ - Uses GitHub Actions cache for fast rebuilds                           │
+  # │ - Skipped if no Docker-related files changed                            │
+  # │                                                                         │
+  # │ 💾 CACHING:                                                             │
+  # │ - Uses GitHub Actions cache for Docker layers (type=gha)                │
+  # │ - First build: ~60 seconds. Cached: ~15 seconds. 4x faster!             │
+  # └─────────────────────────────────────────────────────────────────────────┘
+  docker-build:
+    name: 🐳 Docker Build
+    needs: [check-changes]
+    if: needs.check-changes.outputs.docker_changed == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Set up Docker Buildx for advanced features and caching
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Build the Docker image with GitHub Actions cache
+      - name: Build Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          load: true
+          tags: simple-calculator:test
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Save the image as an artifact so the smoke-test job can use it
+      - name: Save Docker image
+        run: docker save simple-calculator:test -o /tmp/calculator-image.tar
+
+      - name: Upload Docker image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image
+          path: /tmp/calculator-image.tar
+          retention-days: 1
+
+      - name: Generate summary
+        run: |
+          echo "## 🐳 Docker Build" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **Docker image built successfully!**" >> $GITHUB_STEP_SUMMARY
+
+  # ┌─────────────────────────────────────────────────────────────────────────┐
+  # │ JOB 6: SMOKE TEST - Verify the Docker Image Works                       │
+  # │                                                                         │
+  # │ 💡 WHY A SEPARATE JOB?                                                  │
+  # │ - Runs the calculator inside the container                              │
+  # │ - Verifies the app actually works, not just that it builds              │
+  # │ - Only runs if the Docker image was built                               │
+  # └─────────────────────────────────────────────────────────────────────────┘
+  smoke-test:
+    name: 💨 Smoke Test
+    needs: [docker-build]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Docker image
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-image
+          path: /tmp
+
+      - name: Load Docker image
+        run: docker load -i /tmp/calculator-image.tar
+
+      # Run the calculator and verify the output
+      - name: Run smoke test
+        run: |
+          echo "🧪 Running smoke test..."
+          output=$(docker run --rm simple-calculator:test python -c "from src.calculator import Calculator; c = Calculator(); print(c.add(2, 3))")
+          echo "Output: $output"
+
+          if [ "$output" = "5" ]; then
+            echo "✅ Smoke test passed! Calculator is working correctly."
+          else
+            echo "❌ Smoke test failed! Expected '5' but got '$output'"
+            exit 1
+          fi
+
+      - name: Generate summary
+        if: always()
+        run: |
+          echo "## 💨 Smoke Test" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **Calculator works correctly inside Docker!**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Verified: \`2 + 3 = 5.0\`" >> $GITHUB_STEP_SUMMARY
+
+  # ┌─────────────────────────────────────────────────────────────────────────┐
+  # │ JOB 7: REPORT - Generate Beautiful Test Reports                         │
   # │                                                                         │
   # │ 💡 WHY A SEPARATE JOB?                                                  │
   # │ - Report generation is slow (~30 seconds)                               │
@@ -419,9 +471,9 @@ jobs:
   # └─────────────────────────────────────────────────────────────────────────┘
   report:
     name: 📊 Report
-    needs: [test]
+    needs: [smoke-test]  # ← Waits for the full pipeline (test → check → build → smoke)
     runs-on: ubuntu-latest
-    if: always()  # Run even if tests failed - we still want the report!
+    if: always()  # Run even if smoke-test was skipped (no Docker changes)
 
     steps:
       - name: Checkout code
@@ -571,7 +623,7 @@ jobs:
           path: _site
 
   # ┌─────────────────────────────────────────────────────────────────────────┐
-  # │ JOB 6: DEPLOY - Publish to GitHub Pages                                 │
+  # │ JOB 8: DEPLOY - Publish to GitHub Pages                                 │
   # │                                                                         │
   # │ 💡 WHY THIS CONDITIONAL?                                                │
   # │ - github.ref == 'refs/heads/main' = Only deploy from main branch        │
