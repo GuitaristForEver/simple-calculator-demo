@@ -26,6 +26,10 @@ class Calculator:
             raise ValueError("Cannot divide by zero")
         return a / b
 
+    def power(self, a: float, b: float) -> float:
+        """Raise a to the power of b."""
+        return a**b
+
 
 def main():
     """Main function to demonstrate calculator usage."""
