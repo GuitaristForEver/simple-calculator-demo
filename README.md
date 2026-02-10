@@ -4,7 +4,7 @@
   # Simple Calculator App
 
   [![Tests](https://github.com/GuitaristForEver/simple-calculator/actions/workflows/tests.yml/badge.svg)](https://github.com/GuitaristForEver/simple-calculator/actions/workflows/tests.yml)
-  [![codecov](https://codecov.io/gh/GuitaristForEver/simple-calculator/graph/badge.svg)](https://codecov.io/gh/GuitaristForEver/simple-calculator)
+  [![codecov](https://codecov.io/gh/GuitaristForEver/simple-calculator-demo/graph/badge.svg)](https://codecov.io/gh/GuitaristForEver/simple-calculator-demo)
   [![CodeQL](https://github.com/GuitaristForEver/simple-calculator/actions/workflows/codeql.yml/badge.svg)](https://github.com/GuitaristForEver/simple-calculator/actions/workflows/codeql.yml)
 
   **A learning repository for modern CI/CD practices**
