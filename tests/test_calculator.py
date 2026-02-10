@@ -102,3 +102,34 @@ def test_divide_by_zero(calc):
             name="Error Message",
             attachment_type=allure.attachment_type.TEXT,
         )
+
+
+@allure.feature("Calculator Operations")
+@allure.story("Power")
+@allure.severity(allure.severity_level.NORMAL)
+@allure.description("""
+Test the power operation with various inputs:
+- Positive base and exponent
+- Negative base
+- Zero as base or exponent
+- Fractional exponents
+""")
+def test_power(calc):
+    """Test power operation."""
+    with allure.step("Power with positive numbers: 2^3"):
+        assert calc.power(2, 3) == 8
+
+    with allure.step("Power with negative base: (-2)^3"):
+        assert calc.power(-2, 3) == -8
+
+    with allure.step("Power with zero exponent: 5^0"):
+        assert calc.power(5, 0) == 1
+
+    with allure.step("Power with base zero: 0^5"):
+        assert calc.power(0, 5) == 0
+
+    with allure.step("Power with negative exponent: 2^(-2)"):
+        assert calc.power(2, -2) == 0.25
+
+    with allure.step("Power with fractional exponent (square root): 4^0.5"):
+        assert calc.power(4, 0.5) == 2
