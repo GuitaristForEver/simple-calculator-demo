@@ -27,7 +27,7 @@ class Calculator:
         return a / b
 
     def power(self, a: float, b: float) -> float:
-        """Raise a to the power of b. """
+        """Raise a to the power of b."""
         # TODO: add tests
         return a**b
 
